@@ -2,11 +2,12 @@
 // you uncomment its entry in "assets/js/app.js".
 
 // Bring in Phoenix channels client library:
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
+import { promptUsername, setCookie, getCookie } from "./username.js"
 
 // And connect to the path in "lib/chatsec_web/endpoint.ex". We pass the
 // token for authentication. Read below how it should be used.
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", { params: { token: window.userToken } })
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -53,33 +54,6 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // Finally, connect to the socket:
 socket.connect()
 
-function promptUsername() {
-  return new Promise(resolve => {
-    let userName = window.prompt('Enter your username:');
-
-    // Ensure the user entered a valid username
-    while (userName === null || userName === '') {
-      userName = window.prompt('Invalid username! Please enter your username again:');
-    }
-    resolve(userName);
-  });
-}
-
-function setCookie(name, value) {
-  document.cookie = `${name}=${value}`;
-}
-
-function getCookie(name, cookieName) {
-  let cookies = document.cookie;
-  let parts = cookies.split("; ");
-
-  for (let i = 0; i < parts.length; i++) {
-      let [key, val] = parts[i].split("=");
-
-      if (key === name && key === cookieName) return decodeURIComponent(val);
-   }
-}
-
 // Now that you are connected, you can join channels with a topic.
 let channel = socket.channel("room:lobby", {})
 let chatInput = document.querySelector("#chat-input")
@@ -87,25 +61,29 @@ let messagesContainer = document.querySelector("#messages")
 
 // Listen for the 'shift + enter' combo
 chatInput.addEventListener("keypress", event => {
-  if(event.shiftKey && event.key === 'Enter'){
+  if (event.shiftKey && event.key === 'Enter') {
     let msg = chatInput.value.trim()
-    channel.push("new_msg", {body: msg})
-     }
+    if (msg.length < 1) {
+      null;
+    } else {
+      channel.push("new_msg", { body: msg })
+    }
+  }
 })
 
 channel.on("new_msg", payload => {
-  if(getCookie('username', 'username')) {
+  if (getCookie('username', 'username')) {
     let username = getCookie('username', 'username');
     let messageItem = document.createElement("p")
     messageItem.innerText = `${username}: ${payload.body}`
     messagesContainer.appendChild(messageItem)
-    
+
     // Clear the textarea
     chatInput.value = ""
   } else {
     promptUsername().then((value) => {
       username = value;
-  
+
       setCookie('username', username);
     })
   }
