@@ -81,17 +81,15 @@ function getCookie(name, cookieName) {
 }
 
 // Now that you are connected, you can join channels with a topic.
-// Let's assume you have a channel with a topic named `room` and the
-// subtopic is its id - in this case 42:
 let channel = socket.channel("room:lobby", {})
 let chatInput = document.querySelector("#chat-input")
 let messagesContainer = document.querySelector("#messages")
 
+// Listen for the 'shift + enter' combo
 chatInput.addEventListener("keypress", event => {
   if(event.shiftKey && event.key === 'Enter'){
     let msg = chatInput.value.trim()
     channel.push("new_msg", {body: msg})
-    chatInput.value = ""
      }
 })
 
@@ -100,6 +98,9 @@ channel.on("new_msg", payload => {
   let messageItem = document.createElement("p")
   messageItem.innerText = `${username}: ${payload.body}`
   messagesContainer.appendChild(messageItem)
+  
+  // Clear the textarea
+  chatInput.value = ""
 })
 
 if (getCookie('username', 'username')) {
