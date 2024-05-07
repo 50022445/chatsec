@@ -53,6 +53,33 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // Finally, connect to the socket:
 socket.connect()
 
+function promptUsername() {
+  return new Promise(resolve => {
+    let userName = window.prompt('Enter your username:');
+
+    // Ensure the user entered a valid username
+    while (userName === null || userName === '') {
+      userName = window.prompt('Invalid username! Please enter your username again:');
+    }
+    resolve(userName);
+  });
+}
+
+function setCookie(name, value) {
+  document.cookie = `${name}=${value}`;
+}
+
+function getCookie(name, cookieName) {
+  let cookies = document.cookie;
+  let parts = cookies.split("; ");
+
+  for (let i = 0; i < parts.length; i++) {
+      let [key, val] = parts[i].split("=");
+
+      if (key === name && key === cookieName) return decodeURIComponent(val);
+   }
+}
+
 // Now that you are connected, you can join channels with a topic.
 // Let's assume you have a channel with a topic named `room` and the
 // subtopic is its id - in this case 42:
@@ -61,20 +88,34 @@ let chatInput = document.querySelector("#chat-input")
 let messagesContainer = document.querySelector("#messages")
 
 chatInput.addEventListener("keypress", event => {
-  if(event.key === 'Enter'){
-    channel.push("new_msg", {body: chatInput.value})
+  if(event.shiftKey && event.key === 'Enter'){
+    let msg = chatInput.value.trim()
+    channel.push("new_msg", {body: msg})
     chatInput.value = ""
-  }
+     }
 })
 
 channel.on("new_msg", payload => {
+  let username = getCookie('username', 'username');
   let messageItem = document.createElement("p")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
+  messageItem.innerText = `${username}: ${payload.body}`
   messagesContainer.appendChild(messageItem)
 })
 
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+if (getCookie('username', 'username')) {
+  channel.join()
+    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("error", resp => { console.log("Unable to join", resp) })
+} else {
+  promptUsername().then((value) => {
+    username = value;
 
-export default socket
+    setCookie('username', username);
+
+    channel.join()
+      .receive("ok", resp => { console.log("Joined successfully", resp) })
+      .receive("error", resp => { console.log("Unable to join", resp) })
+  });
+}
+
+export default socket;
