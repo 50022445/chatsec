@@ -94,13 +94,21 @@ chatInput.addEventListener("keypress", event => {
 })
 
 channel.on("new_msg", payload => {
-  let username = getCookie('username', 'username');
-  let messageItem = document.createElement("p")
-  messageItem.innerText = `${username}: ${payload.body}`
-  messagesContainer.appendChild(messageItem)
+  if(getCookie('username', 'username')) {
+    let username = getCookie('username', 'username');
+    let messageItem = document.createElement("p")
+    messageItem.innerText = `${username}: ${payload.body}`
+    messagesContainer.appendChild(messageItem)
+    
+    // Clear the textarea
+    chatInput.value = ""
+  } else {
+    promptUsername().then((value) => {
+      username = value;
   
-  // Clear the textarea
-  chatInput.value = ""
+      setCookie('username', username);
+    })
+  }
 })
 
 if (getCookie('username', 'username')) {
