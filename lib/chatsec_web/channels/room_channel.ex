@@ -9,8 +9,8 @@ defmodule ChatsecWeb.RoomChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
-  def handle_in("new_msg", %{"body" => body}, socket) do
-    broadcast!(socket, "new_msg", %{body: body})
+  def handle_in("new_msg", %{"body" => body, "username" => username, "color" => color}, socket) do
+    broadcast!(socket, "new_msg", %{body: body, username: username, color: color})
     {:noreply, socket}
   end
 end

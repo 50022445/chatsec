@@ -59,28 +59,45 @@ let channel = socket.channel("room:lobby", {})
 let chatInput = document.querySelector("#chat-input")
 let messagesContainer = document.querySelector("#messages")
 
+// Generate a new RGB string for every user
+let xd = () => Math.floor(Math.random()*255);
+rgb_string = `${xd()}, ${xd()}, ${xd()}`;
+
 // Listen for the 'shift + enter' combo
 chatInput.addEventListener("keypress", event => {
-  if (event.shiftKey && event.key === 'Enter') {
+  if (!event.shiftKey && event.key === 'Enter') {
     let msg = chatInput.value.trim()
     if (msg.length < 1) {
       null;
     } else {
-      channel.push("new_msg", { body: msg })
+      channel.push("new_msg", { username: getCookie('username'), body: msg, color: rgb_string })
+      chatInput.value = "";
     }
   }
 })
 
 channel.on("new_msg", payload => {
   if (getCookie('username')) {
-    let username = getCookie('username');
-    console.log(username);
+    let usernameItem = document.createElement("span")
     let messageItem = document.createElement("p")
-    messageItem.innerText = `${username}: ${payload.body}`
-    messagesContainer.appendChild(messageItem)
+
+    usernameItem.className = "username"
+    usernameItem.style.color = `rgb(${payload.color})`;
+
+    console.log(payload);
+
+    usernameItem.innerText = payload.username;
+
+    messageItem.innerText = payload.body;
+
+    let divContainer = document.createElement("div")
+    divContainer.appendChild(usernameItem)
+    divContainer.appendChild(messageItem)
+    divContainer.className = "column"
+
+    messagesContainer.appendChild(divContainer)
 
     // Clear the textarea
-    chatInput.value = ""
   } else {
     promptUsername().then((value) => {
       username = value;
