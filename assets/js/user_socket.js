@@ -72,8 +72,9 @@ chatInput.addEventListener("keypress", event => {
 })
 
 channel.on("new_msg", payload => {
-  if (getCookie('username', 'username')) {
-    let username = getCookie('username', 'username');
+  if (getCookie('username')) {
+    let username = getCookie('username');
+    console.log(username);
     let messageItem = document.createElement("p")
     messageItem.innerText = `${username}: ${payload.body}`
     messagesContainer.appendChild(messageItem)
@@ -89,7 +90,7 @@ channel.on("new_msg", payload => {
   }
 })
 
-if (getCookie('username', 'username')) {
+if (getCookie('username')) {
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
