@@ -4,19 +4,6 @@ import { promptUsername, setCookie, getCookie } from "./username.js"
 let socket = new Socket("/socket", { params: { token: window.userToken } })
 socket.connect()
 
-// // Create a new E2EE object
-// const user  = new E2EE();
-// user.generateKeyPair().then(() => {
-//   const exportedPubKey = user.exportPublicKey().then(() => {
-//     console.log("Export success!")
-//   });
-//   // let data = "Hansie Kazanie"
-//   // let encryptedData = user.encrypt(data).then(() => {
-//   //   console.log(encryptedData);
-//   // })
-
-// });
-
 // Now that you are connected, you can join channels with a topic.
 let channel = socket.channel("room:lobby", {})
 let chatInput = document.querySelector("#chat-input")
