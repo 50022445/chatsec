@@ -40,9 +40,14 @@ channel.on("new_msg", payload => {
     let divContainer = document.createElement("div")
     divContainer.appendChild(usernameItem)
     divContainer.appendChild(messageItem)
-    divContainer.className = "column"
+
+    if (payload.username === getCookie('username')) {
+      divContainer.className = "flex flex-col items-end gap-1";
+      } else {
+        divContainer.className = "flex flex-col items-start gap-1";    }
 
     messagesContainer.appendChild(divContainer)
+
   } else {
     promptUsername().then((value) => {
       username = value;

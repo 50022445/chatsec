@@ -1,16 +1,16 @@
-<div class="container flex flex-col p-4 bg-gray-900 min-h-screen text-white">
-  <section class="section flex-grow">
+<div class="container grid grid-rows-3 p-4 bg-gray-900 min-h-screen min-w-full text-white">
+  <section class="section flex-grow row-span-2">
     <h1 class="title text-2xl font-bold mb-4">Messages</h1>
     <div
       id="messages"
       role="log"
       aria-live="polite"
-      class="p-4 border border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-96"
+      class="p-4 border border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-[32rem] flex flex-col gap-2"
     >
     </div>
   </section>
 
-  <section class="section is-small fixed bottom-0 w-full bg-gray-900 pb-4">
+  <section class="section is-small fixed bottom-0 w-full bg-gray-900 pb-4 row-span-1">
     <div>
       <div class="px-4">
         <textarea
