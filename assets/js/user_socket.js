@@ -1,29 +1,32 @@
-import { Socket } from "phoenix";
-import { promptUsername, setCookie, getCookie } from "./username.js";
-import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
+import {
+    Socket
+} from "phoenix";
+import {
+    promptUsername,
+    setCookie,
+    getCookie
+} from "./username.js";
 
 (async function () {
-    let socket = new Socket("/socket", { params: { token: window.userToken } });
+    let socket = new Socket("/socket", {
+        params: {
+            token: window.userToken
+        }
+    });
     socket.connect();
     let channel = socket.channel("room:lobby", {});
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
 
-    let { publicKey, privateKey, _ } = await generateKey();
-    let encodedPublicKey = btoa(String.fromCharCode(...new Uint8Array(publicKey)));
-
-    console.log(encodedPublicKey)
-
+    // Join the channel
     if (username = getCookie('username')) {
         channel.join()
             .receive("ok", _ => {
                 console.log("Joined successfully: ", username);
-                channel.push("new_pub_key", {
-                    username: username,
-                    publickey: encodedPublicKey
-                });
             })
-            .receive("error", resp => { console.log("Unable to join", resp); });
+            .receive("error", resp => {
+                console.log("Unable to join", resp);
+            });
     } else {
         promptUsername().then((value) => {
             let username = value;
@@ -32,27 +35,12 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
             channel.join()
                 .receive("ok", _ => {
                     console.log("Joined successfully", username);
-                    channel.push("new_pub_key", {
-                        username: username,
-                        publickey: encodedPublicKey
-                    });
                 })
-                .receive("error", resp => { console.log("Unable to join", resp); });
+                .receive("error", resp => {
+                    console.log("Unable to join", resp);
+                });
         });
     }
-
-    let publicKeys = {};
-
-    channel.on("new_pub_key", (payload) => {
-        console.log(payload);
-        let binaryString = atob(payload.publickey);
-        let byteArray = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
-        }
-        publicKeys[payload.username] = byteArray.buffer;
-        console.log("Received new public key:", payload);
-    });
 
     let xd = () => Math.floor(Math.random() * 255);
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
@@ -65,16 +53,9 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
                 return;
             } else {
                 try {
-                    let recipientPublicKey = publicKeys[getCookie('username')];
-                    if (!recipientPublicKey) {
-                        console.error("Public key for the recipient not found.");
-                        return;
-                    }
-                    let encryptedMessage = await encryptMessage(recipientPublicKey, msg);
-
                     channel.push("new_msg", {
                         username: getCookie('username'),
-                        body: btoa(String.fromCharCode(...new Uint8Array(encryptedMessage))),
+                        body: msg,
                         color: rgb_string
                     });
                     chatInput.value = "";
@@ -86,13 +67,11 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
         }
     });
 
+    // retrieve the messages
     channel.on("new_msg", async (payload) => {
         if (getCookie('username')) {
             try {
                 if (payload.body) {
-                    let encryptedBytes = Uint8Array.from(atob(payload.body), c => c.charCodeAt(0));
-                    let decryptedMessage = await decryptMessage(privateKey, encryptedBytes);
-
                     let usernameItem = document.createElement("span");
                     let messageItem = document.createElement("p");
 
@@ -100,7 +79,7 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
                     usernameItem.style.color = `rgb(${payload.color})`;
 
                     usernameItem.innerText = payload.username;
-                    messageItem.innerText = decryptedMessage;
+                    messageItem.innerText = payload.body;
 
                     let divContainer = document.createElement("div");
                     divContainer.appendChild(usernameItem);
