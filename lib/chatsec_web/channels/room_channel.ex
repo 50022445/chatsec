@@ -10,7 +10,15 @@ defmodule ChatsecWeb.RoomChannel do
   end
 
   def handle_in("new_msg", %{"body" => body, "username" => username, "color" => color}, socket) do
-    broadcast!(socket, "new_msg", %{body: body, username: username, color: color})
+    payload = %{message: body, username: username}
+    spawn(fn -> save_messages(payload) end)
+
+    broadcast!(socket, "new_msg", %{"body" => body, "username" => username, "color" => color})
     {:noreply, socket}
+  end
+
+  defp save_messages(attrs) do
+    Chatsec.Message.changeset(%Chatsec.Message{}, attrs)
+    |> Chatsec.Repo.insert()
   end
 end

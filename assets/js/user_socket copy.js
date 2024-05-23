@@ -5,59 +5,19 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
 (async function () {
     let socket = new Socket("/socket", { params: { token: window.userToken } });
     socket.connect();
+
+    // Now that you are connected, you can join channels with a topic.
     let channel = socket.channel("room:lobby", {});
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
 
-    let { publicKey, privateKey, _ } = await generateKey();
-    let encodedPublicKey = btoa(String.fromCharCode(...new Uint8Array(publicKey)));
-
-    console.log(encodedPublicKey)
-
-    if (username = getCookie('username')) {
-        channel.join()
-            .receive("ok", _ => {
-                console.log("Joined successfully: ", username);
-                channel.push("new_pub_key", {
-                    username: username,
-                    publickey: encodedPublicKey
-                });
-            })
-            .receive("error", resp => { console.log("Unable to join", resp); });
-    } else {
-        promptUsername().then((value) => {
-            let username = value;
-            setCookie('username', username);
-
-            channel.join()
-                .receive("ok", _ => {
-                    console.log("Joined successfully", username);
-                    channel.push("new_pub_key", {
-                        username: username,
-                        publickey: encodedPublicKey
-                    });
-                })
-                .receive("error", resp => { console.log("Unable to join", resp); });
-        });
-    }
-
-    let publicKeys = {};
-
-    channel.on("new_pub_key", (payload) => {
-        console.log(payload);
-        let binaryString = atob(payload.publickey);
-        let byteArray = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            byteArray[i] = binaryString.charCodeAt(i);
-        }
-        publicKeys[payload.username] = byteArray.buffer;
-        console.log("Received new public key:", payload);
-    });
-
+    // Generate a new RGB string for every user
     let xd = () => Math.floor(Math.random() * 255);
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
 
-    // Chat message logic
+    // Generate a key for encryption/decryption (you might want to store this securely)
+    let encryptionKey = await generateKey();
+
     chatInput.addEventListener("keypress", async (event) => {
         if (!event.shiftKey && event.key === 'Enter') {
             let msg = chatInput.value.trim();
@@ -65,22 +25,21 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
                 return;
             } else {
                 try {
-                    let recipientPublicKey = publicKeys[getCookie('username')];
-                    if (!recipientPublicKey) {
-                        console.error("Public key for the recipient not found.");
-                        return;
-                    }
-                    let encryptedMessage = await encryptMessage(recipientPublicKey, msg);
+                    // Encrypt the message before sending
+                    const { iv, encryptedData } = await encryptMessage(encryptionKey, msg);
+                    const ivString = Array.from(iv).map(byte => String.fromCharCode(byte)).join('');
+                    const encryptedString = Array.from(new Uint8Array(encryptedData)).map(byte => String.fromCharCode(byte)).join('');
 
                     channel.push("new_msg", {
                         username: getCookie('username'),
-                        body: btoa(String.fromCharCode(...new Uint8Array(encryptedMessage))),
+                        body: encryptedString,
+                        iv: ivString,
                         color: rgb_string
                     });
                     chatInput.value = "";
                     event.preventDefault();
                 } catch (error) {
-                    console.error("Sending message failed:", error);
+                    console.error("Encryption failed:", error);
                 }
             }
         }
@@ -89,9 +48,16 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
     channel.on("new_msg", async (payload) => {
         if (getCookie('username')) {
             try {
-                if (payload.body) {
-                    let encryptedBytes = Uint8Array.from(atob(payload.body), c => c.charCodeAt(0));
-                    let decryptedMessage = await decryptMessage(privateKey, encryptedBytes);
+                if (payload.iv && payload.body) {
+
+                    console.log(payload.iv + payload.body)
+                    
+                    const iv = new Uint8Array(Array.from(payload.iv).map(char => char.charCodeAt(0)));
+                    const encryptedData = new Uint8Array(Array.from(payload.body).map(char => char.charCodeAt(0)));
+
+                    console.log(encryptedData)
+
+                    const decryptedMessage = await decryptMessage(encryptionKey, iv, encryptedData);
 
                     let usernameItem = document.createElement("span");
                     let messageItem = document.createElement("p");
@@ -117,7 +83,7 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
                     console.error("Invalid payload:", payload);
                 }
             } catch (error) {
-                console.error("Something went wrong:", error);
+                console.error("Decryption failed:", error);
             }
         } else {
             promptUsername().then((value) => {
@@ -126,4 +92,19 @@ import { generateKey, encryptMessage, decryptMessage } from "./encrypt.js";
             });
         }
     });
+
+    if (getCookie('username')) {
+        channel.join()
+            .receive("ok", resp => { console.log("Joined successfully", resp); })
+            .receive("error", resp => { console.log("Unable to join", resp); });
+    } else {
+        promptUsername().then((value) => {
+            let username = value;
+            setCookie('username', username);
+
+            channel.join()
+                .receive("ok", resp => { console.log("Joined successfully", resp); })
+                .receive("error", resp => { console.log("Unable to join", resp); });
+        });
+    }
 })();
