@@ -9,11 +9,25 @@ defmodule ChatsecWeb.RoomChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
+  def handle_in("public_key", %{"public_key" => public_key, "username" => username}, socket) do
+    broadcast!(socket, "public_key", %{
+      "public_key" => public_key,
+      "username" => username
+    })
+
+    {:noreply, socket}
+  end
+
   def handle_in("new_msg", %{"body" => body, "username" => username, "color" => color}, socket) do
     payload = %{message: body, username: username}
     spawn(fn -> save_messages(payload) end)
 
-    broadcast!(socket, "new_msg", %{"body" => body, "username" => username, "color" => color})
+    broadcast!(socket, "new_msg", %{
+      "body" => body,
+      "username" => username,
+      "color" => color
+    })
+
     {:noreply, socket}
   end
 
