@@ -1,7 +1,8 @@
 defmodule ChatsecWeb.RoomChannel do
   use Phoenix.Channel
 
-  def join("room:lobby", _message, socket) do
+  def join("room:lobby", %{"username" => username}, socket) do
+    send(self(), {:user_joined, username})
     {:ok, socket}
   end
 
@@ -9,25 +10,36 @@ defmodule ChatsecWeb.RoomChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
-  def handle_in("public_key", %{"public_key" => public_key, "username" => username}, socket) do
-    broadcast!(socket, "public_key", %{
-      "public_key" => public_key,
+  def handle_in("publickey", %{"publickey" => publickey, "username" => username}, socket) do
+    broadcast!(socket, "publickey", %{
+      "publickey" => publickey,
       "username" => username
     })
 
     {:noreply, socket}
   end
 
-  def handle_in("new_msg", %{"body" => body, "username" => username, "color" => color}, socket) do
+  def handle_in("new_msg", %{"body" => body, "username" => username, "iv" => iv, "color" => color}, socket) do
     payload = %{message: body, username: username}
     spawn(fn -> save_messages(payload) end)
 
     broadcast!(socket, "new_msg", %{
       "body" => body,
       "username" => username,
+      "iv" => iv,
       "color" => color
     })
 
+    {:noreply, socket}
+  end
+
+  def handle_in("user_joined", username, socket) do
+      IO.inspect({"Hallo", username})
+      {:noreply, socket}
+  end
+
+  def handle_info({:user_joined, username}, socket) do
+    broadcast!(socket, "user_joined", %{"username" => username})
     {:noreply, socket}
   end
 
