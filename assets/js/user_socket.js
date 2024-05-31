@@ -7,13 +7,11 @@ import {
     getCookie
 } from "./username.js";
 import {
-    generateKeyPair,
-    deriveSecretKey,
     encryptMessage,
     decryptMessage,
-    exportPublicKey,
-    importPublicKey
 } from "./encrypt.js";
+
+import { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey } from "./handshake.js";
 
 (async function () {
     username = getCookie('username')
@@ -24,74 +22,41 @@ import {
     });
 
     socket.connect();
-    const pubkeyMap = new Map();
 
     let channel = socket.channel("room:lobby", {
         username: username
     });
-    let chatInput = document.querySelector("#chat-input");
-    let messagesContainer = document.querySelector("#messages");
 
     // Join the channel
     if (username) {
         channel.join()
-            .receive("ok", _ => {
-                console.log("Joined successfully: ", username);
-            })
-            .receive("error", resp => {
+             .receive("ok",  _ =>  {
+                console.log("Joined successfully:  ", username);
+             })
+             .receive("error", resp  =>  {
                 console.log("Unable to join", resp);
-            });
+             });
+    
+        exportedPublicKey  = await generateAndAddToMap(username);
+        sendPublicKey(exportedPublicKey, username, channel);
     } else {
-        promptUsername().then((value) => {
-            let username = value;
+        promptUsername().then((value)  => {
+            let username  = value;
             setCookie('username', username);
-
+    
+            // Wait for the join and public key sending to complete before proceeding.
             channel.join()
-                .receive("ok", _ => {
-                    console.log("Joined successfully", username);
-                })
-                .receive("error", resp => {
+                 .receive("ok",  async _ =>  {
+                    console.log("Joined successfully: ", username);
+                    exportedPublicKey  = await generateAndAddToMap(username);
+                    sendPublicKey(exportedPublicKey, username, channel);
+                 })
+                 .receive("error", resp  =>  {
                     console.log("Unable to join", resp);
-                });
-        });
+                 });
+         });
     }
     
-    let secretKey;
-    const keyPair = await generateKeyPair();
-    const exportedPublicKey = await exportPublicKey(keyPair.publicKey);
-    pubkeyMap.set(exportedPublicKey, username);
-
-    async function getAndConvertPublicKey(publicKey, username) {
-        if (pubkeyMap.has(publicKey)) {
-            console.log(`Public key already stored from user: ${username}`)
-        } else {
-            pubkeyMap.set(publicKey, username)
-            console.log(`New key inserted from user: ${username}`)
-            let convertedPublicKey = await importPublicKey(publicKey)
-            return await deriveSecretKey(keyPair.privateKey, convertedPublicKey);
-        }
-    }
-
-    function sendPublicKey(exportedPublicKey, username) {
-        try {
-            channel.push("publickey", {
-                publickey: exportedPublicKey,
-                username: username
-            });
-        } catch (e) {
-            console.log("Something went wrong!:", e);
-        }
-    }
-
-    // async function getKeyByUsername(username) {
-    //     for (const [key, value] of pubkeyMap.entries()) {
-    //         if (value == username) {
-    //             const importedPublicKey = await importPublicKey(key);
-    //         }
-    //     }
-    //     return null;
-    // }
-
     // Listen for public keys being sent on the channel
     channel.on("publickey", async (payload) => {
         secretKey = await getAndConvertPublicKey(payload.publickey, payload.username);
@@ -99,24 +64,13 @@ import {
 
     channel.on("user_joined", async (payload) => {
         console.log(`User joined: ${payload.username}`)
-        sendPublicKey(exportedPublicKey, username);
+        sendPublicKey(exportedPublicKey, username, channel);
     });
-    // const sleekSecretKey = await deriveSecretKey(sleeksKeyPair.privateKey, hansKeyPair.publicKey);
-    // // console.log("Sleeks secret key: ", sleekSecretKey)
-
-    // const hansSecretKey = await deriveSecretKey(hansKeyPair.privateKey, sleeksKeyPair.publicKey)
-    // // console.log("Hans secret key: ", hansSecretKey)
-
-    // secretString = "PoC string!"
-
-    // let { encryptedMessage, iv } = await encryptMessage(sleekSecretKey, secretString);
-    // console.log("The encrypted message: ", encryptedMessage);
-
-    // let decryptedMessage = await decryptMessage(hansSecretKey, encryptedMessage, iv);
-    // console.log("The decrypted message: ", decryptedMessage);
 
     let xd = () => Math.floor(Math.random() * 255);
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
+    let chatInput = document.querySelector("#chat-input");
+    let messagesContainer = document.querySelector("#messages");
 
     // Chat message logic
     chatInput.addEventListener("keypress", async (event) => {
