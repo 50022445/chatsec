@@ -20,8 +20,8 @@ defmodule ChatsecWeb.RoomChannel do
   end
 
   def handle_in("new_msg", %{"body" => body, "username" => username, "iv" => iv, "color" => color}, socket) do
-    payload = %{message: body, username: username}
-    spawn(fn -> save_messages(payload) end)
+    # payload = %{message: body, username: username}
+    # spawn(fn -> save_messages(payload) end)
 
     broadcast!(socket, "new_msg", %{
       "body" => body,
@@ -34,7 +34,6 @@ defmodule ChatsecWeb.RoomChannel do
   end
 
   def handle_in("user_joined", username, socket) do
-      IO.inspect({"Hallo", username})
       {:noreply, socket}
   end
 
@@ -43,8 +42,8 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  defp save_messages(attrs) do
-    Chatsec.Message.changeset(%Chatsec.Message{}, attrs)
-    |> Chatsec.Repo.insert()
-  end
+  # defp save_messages(attrs) do
+  #   Chatsec.Message.changeset(%Chatsec.Message{}, attrs)
+  #   |> Chatsec.Repo.insert()
+  # end
 end
