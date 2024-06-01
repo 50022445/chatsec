@@ -1,20 +1,10 @@
-import {
-    Socket
-} from "phoenix";
-import {
-    promptUsername,
-    setCookie,
-    getCookie
-} from "./username.js";
-import {
-    encryptMessage,
-    decryptMessage,
-} from "./encrypt.js";
-
+import { Socket } from "phoenix";
+import { promptUsername, setCookie, getCookie } from "./username.js";
+import { encryptMessage, decryptMessage } from "./encrypt.js";
 import { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey } from "./handshake.js";
 
 (async function () {
-    username = getCookie('username')
+    let username = getCookie('username');
     let socket = new Socket("/socket", {
         params: {
             username: username
@@ -41,7 +31,7 @@ import { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey } from "./ha
         sendPublicKey(exportedPublicKey, username, channel);
     } else {
         promptUsername().then((value)  => {
-            let username  = value;
+            username  = value;
             setCookie('username', username);
     
             // Wait for the join and public key sending to complete before proceeding.
@@ -101,7 +91,7 @@ import { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey } from "./ha
 
     // retrieve the messages
     channel.on("new_msg", async (payload) => {
-        if (getCookie('username')) {
+        if (username) {
             try {
                 if (payload.body) {
                     let decryptedMessage = await decryptMessage(secretKey, payload.body, payload.iv);
@@ -133,7 +123,7 @@ import { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey } from "./ha
             }
         } else {
             promptUsername().then((value) => {
-                let username = value;
+                username = value;
                 setCookie('username', username);
             });
         }
