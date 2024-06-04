@@ -31,7 +31,9 @@ defmodule ChatsecWeb.ChannelState do
   @impl true
   def handle_call({:join, room_id, identifier}, _from, state) do
     {:reply, :ok,
-     Map.update(state, room_id, [identifier], fn identifiers -> [identifier | Enum.reject(identifiers, &(&1 == identifier))] end)}
+     Map.update(state, room_id, [identifier], fn identifiers ->
+       [identifier | Enum.reject(identifiers, &(&1 == identifier))]
+     end)}
   end
 
   @impl true
