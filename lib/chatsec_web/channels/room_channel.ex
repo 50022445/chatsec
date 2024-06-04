@@ -1,8 +1,10 @@
 defmodule ChatsecWeb.RoomChannel do
   use Phoenix.Channel
+  alias ChatsecWeb.ChannelState
 
-  def join("room:lobby", %{"username" => username}, socket) do
+  def join("room:lobby", %{"username" => username}, socket) when is_binary(username) do
     send(self(), {:user_joined, username})
+    ChannelState.join("lobby", username)
     {:ok, socket}
   end
 
@@ -33,7 +35,7 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("user_joined", username, socket) do
+  def handle_in("user_joined", _username, socket) do
       {:noreply, socket}
   end
 
