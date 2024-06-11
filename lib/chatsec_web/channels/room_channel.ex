@@ -27,6 +27,7 @@ defmodule ChatsecWeb.RoomChannel do
         %{"body" => body, "username" => username, "iv" => iv, "color" => color},
         socket
       ) do
+
     # payload = %{message: body, username: username}
     # spawn(fn -> save_messages(payload) end)
 
@@ -36,11 +37,6 @@ defmodule ChatsecWeb.RoomChannel do
       "iv" => iv,
       "color" => color
     })
-
-    {:noreply, socket}
-  end
-
-  def handle_in("user_joined", _username, socket) do
     {:noreply, socket}
   end
 

@@ -6,4 +6,8 @@ defmodule ChatsecWeb.PageController do
     # so skip the default app layout.
     render(conn, :home, layout: false)
   end
+
+  def chat(conn, _params) do
+    render(conn, :chat, layout: false)
+  end
 end

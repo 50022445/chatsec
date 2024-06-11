@@ -10,11 +10,11 @@ function promptUsername() {
 }
 
 function setCookie(name, value) {
-    localStorage.setItem(name, value);
+    sessionStorage.setItem(name, value);
 }
 
 function getCookie(cookieName) {
-    username = localStorage.getItem(cookieName);
+    username = sessionStorage.getItem(cookieName);
     return username;
 }
 
