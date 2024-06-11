@@ -1,11 +1,13 @@
 function promptUsername() {
     return new Promise(resolve => {
-        let userName = window.prompt('Enter your username:');
+        let username = window.prompt('Enter your username:');
         // Ensure the user entered a valid username
-        while (userName === null || userName === '' || userName.length > 10) {
-            userName = window.prompt('Invalid username! (Max 10 characters):');
+        while (username === null || username === '' || username.length > 10) {
+            username = window.prompt('Invalid username! (Max 10 characters):');
         }
-        resolve(userName);
+        
+        sessionStorage.setItem('username', username)
+
     });
 }
 

@@ -17,7 +17,7 @@ defmodule ChatsecWeb.Router do
   scope "/", ChatsecWeb do
     pipe_through :browser
     get "/", PageController, :home
-    get "/chat", PageController, :chat
+    get "/chat/:chatid", PageController, :chat
   end
 
   # Other scopes may use custom stacks.

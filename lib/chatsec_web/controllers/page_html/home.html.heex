@@ -1,11 +1,11 @@
 <div class="text-center mt-8">
-    <h1 class="text-6xl font-bold text-white">ChatSec | E2EE chatting</h1>
+    <h1 class="text-6xl font-bold text-white">ChatSec | E2EE chat</h1>
 </div>
 
 <div class="flex justify-center space-x-4 m-8">
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="console.log('hallo')">Generate key pair</button>
-    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="gencolor">Set color</button>
-    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" id="genchat">Start a chat</button>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="generateKeyPair()">Generate key pair</button>
+    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="promptUsername()">Set username</button>
+    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="redirectUserToChat()">Start a chat</button>
 </div>
 
 <div class="container mx-auto flex justify-center text-center space-x-8">
@@ -21,5 +21,3 @@
         <img src={~p"/images/fbi-pepe.png"} alt="Sample Image" class="rounded-lg shadow-lg" />
     </div> !-->
 </div>
-
-<script type="module" scr={~p"/assets/js/encrypt.js"} />

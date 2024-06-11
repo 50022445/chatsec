@@ -2,15 +2,10 @@ defmodule ChatsecWeb.RoomChannel do
   use Phoenix.Channel
   alias ChatsecWeb.ChannelState
 
-  def join("room:lobby", %{"username" => username}, socket) when is_binary(username) do
+  def join("room:" <> private_room_id, %{"username" => username}, socket) when is_binary(username) do
     send(self(), {:user_joined, username})
-    ChannelState.join("lobby", username)
-    {:ok, assign(socket, user_id: username, room_id: "lobby")}
-  end
-
-  def join("room:" <> _private_room_id, _params, _socket) do
-    send(self(), {:user_joined})
-    {:error, %{reason: "unauthorized"}}
+    ChannelState.join(private_room_id, username)
+    {:ok, assign(socket, user_id: username, room_id: private_room_id)}
   end
 
   def handle_in("publickey", %{"publickey" => publickey, "username" => username}, socket) do
@@ -18,7 +13,6 @@ defmodule ChatsecWeb.RoomChannel do
       "publickey" => publickey,
       "username" => username
     })
-
     {:noreply, socket}
   end
 

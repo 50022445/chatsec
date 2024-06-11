@@ -7,7 +7,7 @@ defmodule ChatsecWeb.PageController do
     render(conn, :home, layout: false)
   end
 
-  def chat(conn, _params) do
+  def chat(conn, %{"chatid" => _chatid}) do
     render(conn, :chat, layout: false)
   end
 end

@@ -11,7 +11,7 @@ async function generateAndAddToMap(username) {
 
         return exportedPublicKey
     } catch (e) {
-        console.log("No keypair generated!")
+        console.log("No key pair generated!")
     }
 }
 
