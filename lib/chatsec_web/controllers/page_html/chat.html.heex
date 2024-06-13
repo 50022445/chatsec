@@ -1,4 +1,4 @@
-<div class="container grid grid-rows-3 bg-gray-900 min-h-screen min-w-full text-white">
+<div class="container grid grid-rows-3 bg-gray-900 min-w-full text-white">
   <section class="section flex-grow row-span-2 p-4">
     <h1 class="title text-2xl font-bold mb-4">Messages</h1>
     <div
@@ -9,6 +9,13 @@
     >
     </div>
   </section>
+
+  <div>
+    <button id="copy-url"
+      class="ml-4 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600">
+      Invite user
+    </button>
+  </div>
 
   <section class="section is-small fixed bottom-0 w-full bg-gray-900 p-4 row-span-1">
     <div>
@@ -21,6 +28,7 @@
     </div>
   </section>
 </div>
+
 
 <script type="text/javascript">
   let username = sessionStorage.getItem('username');
