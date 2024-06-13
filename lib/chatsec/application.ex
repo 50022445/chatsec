@@ -17,7 +17,8 @@ defmodule Chatsec.Application do
       # Start a worker by calling: Chatsec.Worker.start_link(arg)
       # {Chatsec.Worker, arg},
       # Start to serve requests, typically the last entry
-      ChatsecWeb.Endpoint
+      ChatsecWeb.Endpoint,
+      ChatsecWeb.ChannelState
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

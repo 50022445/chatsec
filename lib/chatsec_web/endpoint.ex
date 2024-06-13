@@ -15,7 +15,7 @@ defmodule ChatsecWeb.Endpoint do
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
 
-    socket "/socket", ChatsecWeb.UserSocket,
+  socket "/socket", ChatsecWeb.UserSocket,
     websocket: true,
     longpoll: false
 

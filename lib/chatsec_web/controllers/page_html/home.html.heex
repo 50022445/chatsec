@@ -1,35 +1,23 @@
-<div class="container grid grid-rows-3 bg-gray-900 min-h-screen min-w-full text-white">
-  <section class="section flex-grow row-span-2 p-4">
-    <h1 class="title text-2xl font-bold mb-4">Messages</h1>
-    <div
-      id="messages"
-      role="log"
-      aria-live="polite"
-      class="border p-4 border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-[32rem] flex flex-col gap-2"
-    >
-    </div>
-  </section>
-
-  <section class="section is-small fixed bottom-0 w-full bg-gray-900 p-4 row-span-1">
-      <div>
-        <textarea
-          id="chat-input"
-          class="textarea w-full border border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-500"
-          placeholder="Write a message.."
-        ></textarea>
-        <p class="text-sm text-gray-500 mt-2">Press `Enter` to send message.</p>
-      </div>
-  </section>
+<div class="text-center mt-8">
+    <h1 class="text-6xl font-bold text-white">ChatSec | E2EE chat</h1>
 </div>
 
+<div class="flex justify-center space-x-4 m-8">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="generateKeyPair()">Generate key pair</button>
+    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="promptUsername()">Set username</button>
+    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="redirectUserToChat()">Start a chat</button>
+</div>
 
-<script>
-  const messages = document.getElementById('messages');
-  function autoScroll() {
-    messages.scrollTop = messages.scrollHeight;
-  }
-  const observer = new MutationObserver(() => {
-    autoScroll();
-  });
-  observer.observe(messages, { childList: true });
-</script>
+<div class="container mx-auto flex justify-center text-center space-x-8">
+    <div class="w-2/3 bg-gray-800 p-8 rounded-lg shadow-lg">
+        <p class="text-lg text-white">
+            End-to-end encryption is crucial for protecting the privacy and security of digital communications, ensuring that only the intended recipients can read the messages.
+            This form of encryption prevents unauthorized access by hackers, <span class="text-red-600">government agencies</span>, and even the service providers themselves, safeguarding sensitive information from being intercepted or tampered with.
+            Digital freedom, on the other hand, encompasses the right to access, create, and share information freely and securely on the internet.
+            Together, end-to-end encryption and digital freedom form the bedrock of a free and open digital society, empowering individuals to communicate and collaborate without fear of surveillance or censorship.
+        </p>
+    </div>
+   <!-- <div class="w-1/3">
+        <img src={~p"/images/fbi-pepe.png"} alt="Sample Image" class="rounded-lg shadow-lg" />
+    </div> !-->
+</div>

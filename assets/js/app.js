@@ -1,7 +1,5 @@
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
-import "./user_socket.js"
-
 // You can include dependencies in two ways.
 //
 // The simplest option is to put them in assets/vendor and
@@ -18,9 +16,12 @@ import "./user_socket.js"
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import { generateKeyPair } from "./encrypt.js"
+import { promptUsername } from "./username.js"
+import { redirectUserToChat, connectToChannel, deleteChat } from "./chat.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -40,5 +41,10 @@ liveSocket.connect()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.deleteChat = deleteChat
+window.redirectUserToChat = redirectUserToChat
+window.connectToChannel = connectToChannel
+window.promptUsername = promptUsername
+window.generateKeyPair = generateKeyPair
 window.liveSocket = liveSocket
 
