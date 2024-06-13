@@ -27,7 +27,7 @@ config :chatsec, ChatsecWeb.Endpoint,
   ],
   check_origin: false,
   code_reloader: true,
-  debug_errors: false,
+  debug_errors: true,
   secret_key_base: "q0W4c8tT7iqG95ZFuvUHYPf/vDNHrJjPWAO8mR/bHJU8C33IeBjnZ1jCMIzjkrwk",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:chatsec, ~w(--sourcemap=inline --watch)]},
