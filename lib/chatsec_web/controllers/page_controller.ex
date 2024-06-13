@@ -18,7 +18,7 @@ defmodule ChatsecWeb.PageController do
     if chatid in ChannelState.get_rooms() do
       render(conn, :chat, layout: false)
     else
-      render(conn, :error, layout: false)
+      render(conn, :room_not_found, layout: false)
     end
   end
 end
