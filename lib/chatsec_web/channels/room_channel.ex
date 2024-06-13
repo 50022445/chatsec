@@ -16,23 +16,40 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  # def handle_in(
+  #       "new_msg",
+  #       %{"body" => body, "username" => username, "iv" => iv, "color" => color},
+  #       socket
+  #     ) do
+
+  #   # payload = %{message: body, username: username}
+  #   # spawn(fn -> save_messages(payload) end)
+
+  #   broadcast!(socket, "new_msg", %{
+  #     "body" => body,
+  #     "username" => username,
+  #     "iv" => iv,
+  #     "color" => color
+  #   })
+  #   {:noreply, socket}
+  # end
+
   def handle_in(
-        "new_msg",
-        %{"body" => body, "username" => username, "iv" => iv, "color" => color},
-        socket
-      ) do
+    "new_msg",
+    %{"body" => body, "username" => username, "color" => color},
+    socket
+  ) do
 
-    # payload = %{message: body, username: username}
-    # spawn(fn -> save_messages(payload) end)
+# payload = %{message: body, username: username}
+# spawn(fn -> save_messages(payload) end)
 
-    broadcast!(socket, "new_msg", %{
-      "body" => body,
-      "username" => username,
-      "iv" => iv,
-      "color" => color
-    })
-    {:noreply, socket}
-  end
+broadcast!(socket, "new_msg", %{
+  "body" => body,
+  "username" => username,
+  "color" => color
+})
+{:noreply, socket}
+end
 
   def handle_info({:user_joined, username}, socket) do
     broadcast!(socket, "user_joined", %{"username" => username})
