@@ -3,7 +3,7 @@ import {
 } from "phoenix";
 
 async function redirectUserToChat() {
-    window.location = `/chat/create`
+    window.location = '/chat/create'
 }
 
 function connectToChannel(username) {
@@ -29,7 +29,13 @@ function connectToChannel(username) {
     return channel
 }
 
+function deleteChat() {
+    const uuid = window.location.href.split("/").slice(-1)[0]
+    window.location = `/chat/delete/${uuid}`
+}
+
 export {
     redirectUserToChat,
-    connectToChannel
+    connectToChannel,
+    deleteChat
 }

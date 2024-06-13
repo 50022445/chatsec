@@ -13,6 +13,10 @@ defmodule ChatsecWeb.ChannelState do
     GenServer.call(__MODULE__, {:create, room_id})
   end
 
+  def delete_room(room_id) do
+    GenServer.call(__MODULE__, {:delete, room_id})
+  end
+
   def list_users(room_id) do
     GenServer.call(__MODULE__, {:list, room_id})
   end
@@ -40,6 +44,12 @@ defmodule ChatsecWeb.ChannelState do
   def handle_call({:create, room_id}, _from, state) do
     {:reply, :ok,
       Map.put(state, room_id, [])}
+  end
+
+  @impl true
+  def handle_call({:delete, room_id}, _from, state) do
+    {:reply, :ok,
+      Map.delete(state, room_id)}
   end
 
   @impl true
