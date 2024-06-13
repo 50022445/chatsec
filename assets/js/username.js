@@ -5,7 +5,8 @@ function promptUsername() {
         while (username === null || username === '' || username.length > 10) {
             username = window.prompt('Invalid username! (Max 10 characters):');
         }
-        
+
+        resolve(username)
         sessionStorage.setItem('username', username)
 
     });
