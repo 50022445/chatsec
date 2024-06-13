@@ -18,7 +18,7 @@ defmodule ChatsecWeb.ChannelState do
   end
 
   def list_users(room_id) do
-    GenServer.call(__MODULE__, {:list, room_id})
+    GenServer.call(__MODULE__, {:list_users, room_id})
   end
 
   def join(room_id, identifier) do
@@ -36,7 +36,7 @@ defmodule ChatsecWeb.ChannelState do
   end
 
   @impl true
-  def handle_call({:list, room_id}, _from, state) do
+  def handle_call({:list_users, room_id}, _from, state) do
     {:reply, Map.get(state, room_id), state}
   end
 
