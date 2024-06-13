@@ -3,8 +3,7 @@ import {
 } from "phoenix";
 
 async function redirectUserToChat() {
-    const uuid = generateChatUuid();
-    window.location = `/chat/${uuid}`
+    window.location = `/chat/create`
 }
 
 function connectToChannel(username) {
@@ -28,10 +27,6 @@ function connectToChannel(username) {
         });
 
     return channel
-}
-
-function generateChatUuid() {
-    return crypto.randomUUID();
 }
 
 export {

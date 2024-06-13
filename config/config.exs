@@ -17,6 +17,7 @@ config :chatsec, ChatsecWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: ChatsecWeb.ErrorHTML, json: ChatsecWeb.ErrorJSON],
+    root_layout: {ChatsecWeb.Layouts, :root},
     layout: false
   ],
   pubsub_server: Chatsec.PubSub,
