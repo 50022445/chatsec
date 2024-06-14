@@ -21,7 +21,7 @@ import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import { generateKeyPair } from "./encrypt.js"
 import { usernameForm } from "./username.js"
-import { redirectUserToChat, connectToChannel, deleteChat } from "./chat.js"
+import { redirectUserToChat, connectToChannel, showDeleteChatModal } from "./chat.js"
 import { copyChatUrl } from "./link.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
@@ -44,7 +44,7 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.copyChatUrl = copyChatUrl
 window.usernameForm = usernameForm
-window.deleteChat = deleteChat
+window.showDeleteChatModal = showDeleteChatModal
 window.redirectUserToChat = redirectUserToChat
 window.connectToChannel = connectToChannel
 window.generateKeyPair = generateKeyPair

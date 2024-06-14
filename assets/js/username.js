@@ -37,7 +37,7 @@ function usernameForm() {
     // Add event listener to close the modal
     document.getElementById('closeModalButton').addEventListener('click', function () {
       closeModal();
-      showToast('Username not set!', "danger");
+      showToast('Username not set.', "danger");
     });
 
     // Add event listener to handle form submission
@@ -46,7 +46,7 @@ function usernameForm() {
       if (username) {
         sessionStorage.setItem('username', username);
         closeModal();
-        showToast("Username set succesfully!", "success")
+        showToast("Username set.", "success")
         resolve(username);
       } else {
         alert('Please enter a username');

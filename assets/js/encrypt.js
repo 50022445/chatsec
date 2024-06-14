@@ -9,7 +9,7 @@ async function generateKeyPair() {
         ["deriveKey"],
     );
 
-    showToast("Keys generated succesfully!", "success")
+    showToast("Keys generated.", "success")
     return keyPair;
 }
 
