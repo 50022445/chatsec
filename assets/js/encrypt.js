@@ -1,3 +1,5 @@
+import { showToast } from "./toast"
+
 async function generateKeyPair() {
     const keyPair = await crypto.subtle.generateKey({
             name: "ECDH",
@@ -7,6 +9,7 @@ async function generateKeyPair() {
         ["deriveKey"],
     );
 
+    showToast("Keys generated succesfully!", "success")
     return keyPair;
 }
 

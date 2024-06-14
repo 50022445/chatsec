@@ -1,3 +1,5 @@
+import { showToast } from "./toast";
+
 function usernameForm() {
     return new Promise((resolve, reject) => {
       const modalHTML = `
@@ -35,7 +37,7 @@ function usernameForm() {
       // Add event listener to close the modal
       document.getElementById('closeModalButton').addEventListener('click', function() {
         closeModal();
-        reject('User canceled');
+        showToast('Username not set!', "danger");
       });
   
       // Add event listener to handle form submission
@@ -44,6 +46,7 @@ function usernameForm() {
         if (username) {
           sessionStorage.setItem('username', username);
           closeModal();
+          showToast("Username set succesfully!", "success")
           resolve(username);
         } else {
           alert('Please enter a username');

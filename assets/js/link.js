@@ -1,5 +1,11 @@
+import { showToast } from "./toast";
+
 function copyToClipboard(url) {
-    navigator.clipboard.writeText(url)
+    if (navigator.clipboard.writeText(url)) {
+      showToast("Link copied to clipboard.", "success")
+    } else {
+      showToast("Failed to copy link!", "danger" )
+    }
 }
 
 function copyChatUrl() {
@@ -44,7 +50,6 @@ function copyChatUrl() {
       // Add event listener to close the modal
       document.getElementById('closeModalButton').addEventListener('click', function() {
         closeModal();
-        reject('User canceled');
       });
   
       // Add event listener to handle form submission
