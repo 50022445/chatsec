@@ -22,6 +22,7 @@ import topbar from "../vendor/topbar"
 import { generateKeyPair } from "./encrypt.js"
 import { usernameForm } from "./username.js"
 import { redirectUserToChat, connectToChannel, deleteChat } from "./chat.js"
+import { copyChatUrl } from "./link.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -41,6 +42,7 @@ liveSocket.connect()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.copyChatUrl = copyChatUrl
 window.usernameForm = usernameForm
 window.deleteChat = deleteChat
 window.redirectUserToChat = redirectUserToChat
