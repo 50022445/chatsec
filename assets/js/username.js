@@ -1,8 +1,8 @@
 import { showToast } from "./toast";
 
 function usernameForm() {
-    return new Promise((resolve, reject) => {
-      const modalHTML = `
+  return new Promise((resolve, reject) => {
+    const modalHTML = `
         <div id="usernameModal" class="modal fixed inset-0 flex items-center justify-center blur-none z-50">
           <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full blur-none">
             <h2 class="text-2xl font-bold text-white mb-4">Enter Username</h2>
@@ -14,45 +14,47 @@ function usernameForm() {
           </div>
         </div>
       `;
-      // Create a div element and set its innerHTML to the modal HTML
-      const modalContainer = document.createElement('div');
-      modalContainer.innerHTML = modalHTML;
+    // Create a div element and set its innerHTML to the modal HTML
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHTML;
 
-      const portal = document.getElementById('portal');
-      const root = document.getElementById('root');
+    const portal = document.getElementById('portal');
+    const root = document.getElementById('root');
 
-      portal.appendChild(modalContainer);
-      // Add blur class to the body
-      root.classList.add('blur-sm')  
-      // Show the modal
-      document.getElementById('usernameModal').style.display = 'flex';
-  
-      // Function to close the modal and remove it from the DOM
-      function closeModal() {
-        document.getElementById('usernameModal').style.display = 'none';
-        portal.removeChild(modalContainer);
-        root.classList.remove('blur-sm');
-      }
-  
-      // Add event listener to close the modal
-      document.getElementById('closeModalButton').addEventListener('click', function() {
-        closeModal();
-        showToast('Username not set!', "danger");
-      });
-  
-      // Add event listener to handle form submission
-      document.getElementById('submitModalButton').addEventListener('click', function() {
-        const username = document.getElementById('usernameInput').value;
-        if (username) {
-          sessionStorage.setItem('username', username);
-          closeModal();
-          showToast("Username set succesfully!", "success")
-          resolve(username);
-        } else {
-          alert('Please enter a username');
-        }
-      });
+    portal.appendChild(modalContainer);
+    // Add blur class to the body
+    root.classList.add('blur-sm')
+    // Show the modal
+    document.getElementById('usernameModal').style.display = 'flex';
+
+    // Function to close the modal and remove it from the DOM
+    function closeModal() {
+      document.getElementById('usernameModal').style.display = 'none';
+      portal.removeChild(modalContainer);
+      root.classList.remove('blur-sm');
+    }
+
+    // Add event listener to close the modal
+    document.getElementById('closeModalButton').addEventListener('click', function () {
+      closeModal();
+      showToast('Username not set!', "danger");
     });
-  }
-  
-export { usernameForm };
+
+    // Add event listener to handle form submission
+    document.getElementById('submitModalButton').addEventListener('click', function () {
+      const username = document.getElementById('usernameInput').value;
+      if (username) {
+        sessionStorage.setItem('username', username);
+        closeModal();
+        showToast("Username set succesfully!", "success")
+        resolve(username);
+      } else {
+        alert('Please enter a username');
+      }
+    });
+  });
+}
+
+export {
+  usernameForm
+};

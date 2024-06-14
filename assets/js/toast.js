@@ -53,4 +53,6 @@ function showToast(message, type) {
     }, 5000);
 }
 
-export { showToast }
+export {
+    showToast
+}

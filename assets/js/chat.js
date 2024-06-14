@@ -1,6 +1,4 @@
-import {
-    Socket
-} from "phoenix";
+import { Socket } from "phoenix";
 import { usernameForm } from "./username";
 
 async function redirectUserToChat() {
@@ -8,7 +6,7 @@ async function redirectUserToChat() {
 }
 
 function connectToChannel(username) {
-    if (username != null) { 
+    if (username != null) {
         const socket = new Socket("/socket", {
             params: {
                 username: username
