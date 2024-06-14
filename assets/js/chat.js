@@ -1,7 +1,7 @@
 import {
     Socket
 } from "phoenix";
-import { promptUsername } from "./username";
+import { usernameForm } from "./username";
 
 async function redirectUserToChat() {
     window.location = '/chat/create'
@@ -30,8 +30,9 @@ function connectToChannel(username) {
 
         return channel
     } else {
-        promptUsername().then((username) => {
+        usernameForm().then((username) => {
             connectToChannel(username)
+            location.reload();
         })
     }
 }
