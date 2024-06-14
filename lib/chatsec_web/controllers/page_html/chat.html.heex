@@ -1,28 +1,23 @@
 <div class="container grid grid-rows-3 bg-gray-900 min-w-full text-white">
   <section class="section flex-grow row-span-2 p-4">
     <h1 class="title text-2xl font-bold mb-4">Messages</h1>
-    <div
-      id="messages"
-      role="log"
-      aria-live="polite"
-      class="border p-4 border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-[32rem] flex flex-col gap-2"
-    >
+    <div id="messages" role="log" aria-live="polite"
+      class="border p-4 border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-[32rem] flex flex-col gap-2">
     </div>
 
     <div class="mt-3 flex justify-end space-x-2">
       <button onclick="copyChatUrl()"
         class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">Invite user</button>
-      <button onclick="deleteChat()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete room</button>
+      <button onclick="deleteChat()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete
+        room</button>
     </div>
   </section>
 
   <section class="section is-small fixed bottom-0 w-full bg-gray-900 p-4 row-span-1">
     <div>
-      <textarea
-        id="chat-input"
+      <textarea id="chat-input"
         class="textarea w-full border border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-500"
-        placeholder="Write a message.."
-      ></textarea>
+        placeholder="Write a message.."></textarea>
       <p class="text-sm text-gray-500 mt-2">Press `Enter` to send message.</p>
     </div>
   </section>
@@ -40,64 +35,67 @@
 
     // Chat message logic
     chatInput.addEventListener("keypress", async (event) => {
-        if (!event.shiftKey && event.key === 'Enter') {
-            let msg = chatInput.value.trim();
-            if (msg.length < 1) {
-                return;
-            } else {
-                try {
-                    channel.push("new_msg", {
-                        username: username,
-                        body: msg,
-                        color: rgb_string
-                    });
-                    chatInput.value = "";
-                    event.preventDefault();
-                } catch (error) {
-                    console.error("Sending message failed:", error);
-                }
-            }
+      if (!event.shiftKey && event.key === 'Enter') {
+        let msg = chatInput.value.trim();
+        if (msg.length < 1) {
+          return;
+        } else {
+          try {
+            channel.push("new_msg", {
+              username: username,
+              body: msg,
+              color: rgb_string
+            });
+            chatInput.value = "";
+            event.preventDefault();
+          } catch (error) {
+            console.error("Sending message failed:", error);
+          }
         }
+      }
     })
     // retrieve the messages
     channel.on("new_msg", async (payload) => {
-        try {
-            if (payload.body) {
-                let usernameItem = document.createElement("span");
-                let messageItem = document.createElement("p");
+      try {
+        if (payload.body) {
+          let usernameItem = document.createElement("span");
+          let messageItem = document.createElement("p");
 
-                usernameItem.className = "username";
-                usernameItem.style.color = `rgb(${payload.color})`;
+          usernameItem.className = "username";
+          usernameItem.style.color = `rgb(${payload.color})`;
 
-                usernameItem.innerText = payload.username;
-                messageItem.innerText = payload.body;
+          usernameItem.innerText = payload.username;
+          messageItem.innerText = payload.body;
 
-                let divContainer = document.createElement("div");
-                divContainer.appendChild(usernameItem);
-                divContainer.appendChild(messageItem);
+          let divContainer = document.createElement("div");
+          divContainer.appendChild(usernameItem);
+          divContainer.appendChild(messageItem);
 
-                if (payload.username === username) {
-                    divContainer.className = "flex flex-col items-end gap-1";
-                } else {
-                    divContainer.className = "flex flex-col items-start gap-1";
-                }
+          if (payload.username === username) {
+            divContainer.className = "flex flex-col items-end gap-1";
+          } else {
+            divContainer.className = "flex flex-col items-start gap-1";
+          }
 
-                messagesContainer.appendChild(divContainer);
-            } else {
-                console.error("Invalid payload:", payload);
-            }
-        } catch (error) {
-            console.error("Something went wrong:", error);
+          messagesContainer.appendChild(divContainer);
+        } else {
+          console.error("Invalid payload:", payload);
         }
+      } catch (error) {
+        console.error("Something went wrong:", error);
+      }
     })
   });
-  
+
   const messages = document.getElementById('messages');
+
   function autoScroll() {
     messages.scrollTop = messages.scrollHeight;
   }
   const observer = new MutationObserver(() => {
     autoScroll();
   });
-  observer.observe(messages, { childList: true });
+  observer.observe(messages, {
+    childList: true
+  });
 </script>
