@@ -9,7 +9,8 @@ async function generateKeyPair() {
         ["deriveKey"],
     );
 
-    showToast("Keys generated.", "success")
+    // console("Keys generated.", "success")
+    console.log("keys generated");
     return keyPair;
 }
 
@@ -26,6 +27,7 @@ function deriveSecretKey(privateKey, publicKey) {
             true,
             ["encrypt", "decrypt"],
         );
+        console.log("derive key:", secretKey);
         return secretKey;
     } catch (e) {
         console.log("Something went wrong!", e)
@@ -45,6 +47,7 @@ function encodeBase64(arrayBuffer) {
     for (let i = 0; i < len; i++) {
         binary += String.fromCharCode(bytes[i]);
     }
+    console.log("encode Base64:", binary);
     return btoa(binary);
 }
   

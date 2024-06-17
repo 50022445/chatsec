@@ -9,11 +9,14 @@ import {
     showToast
 } from "./toast";
 
+import { handshake } from "./handshake"
+
+
 async function redirectUserToChat() {
     window.location = '/chat/create'
 }
 
-function renderOnlineUsers(presence) {
+function renderOnlineUsers(presence, channel) {
     let userList = []
     let response = "";
     const svgIcon = `
@@ -31,15 +34,16 @@ function renderOnlineUsers(presence) {
             const exchangeButton = document.createElement('button');
             exchangeButton.className = "bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded";
             exchangeButton.textContent = "Exchange keys";
-            exchangeButton.id = "exchange"
+            exchangeButton.id = "exchange";
+            exchangeButton.onclick = handshake(id, channel)
 
-            const cta = document.getElementById('CTA')
+            const cta = document.getElementById('CTA');
             const exchangeButtonId = document.getElementById('exchange');
 
             if (!cta.contains(exchangeButtonId)) {
                 cta.prepend(exchangeButton);
             }
-        } 
+        }
     });
 
     const usernamesDiv = document.getElementById('usernames');
@@ -61,7 +65,7 @@ function connectToChannel(username) {
         })
 
         let presence = new Presence(channel)
-        presence.onSync(() => renderOnlineUsers(presence))
+        presence.onSync(() => renderOnlineUsers(presence, channel))
 
         channel.join()
             .receive("ok", _ => {

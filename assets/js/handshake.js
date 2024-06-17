@@ -1,28 +1,26 @@
 import { importPublicKey, deriveSecretKey, generateKeyPair, exportPublicKey } from "./encrypt"
+import { showToast } from "./toast";
 
-let keyPair;
-const pubkeyMap = new Map;
-
-async function generateAndAddToMap(username) {
+async function generateAndAddToMap(username, pubkeyMap) {
     try {
         keyPair = await generateKeyPair();
         const exportedPublicKey = await exportPublicKey(keyPair.publicKey);
         pubkeyMap.set(exportedPublicKey, username);
-
-        return exportedPublicKey
+        
+        return { keyPair, exportedPublicKey }
     } catch (e) {
         console.log("No key pair generated!")
     }
 }
 
-async function getAndConvertPublicKey(publicKey, username) {
-    if (pubkeyMap.has(publicKey)) {
+async function getAndConvertPublicKey(exportedPublicKey, username, pubkeyMap, privateKey) {
+    if (pubkeyMap.has(exportedPublicKey)) {
         console.log(`Public key already stored from user: ${username}`)
     } else {
-        pubkeyMap.set(publicKey, username)
-        console.log(`New key inserted from user: ${username}`)
-        let convertedPublicKey = await importPublicKey(publicKey)
-        return await deriveSecretKey(keyPair.privateKey, convertedPublicKey);
+        pubkeyMap.set(exportedPublicKey, username)
+        console.log(`New key inserted from user: ${username}`, exportPublicKey)
+        let convertedPublicKey = await importPublicKey(exportedPublicKey)
+        return await deriveSecretKey(privateKey, convertedPublicKey);
     }
 }
 
@@ -37,4 +35,19 @@ function sendPublicKey(exportedPublicKey, username, channel) {
     }
 }
 
-export { generateAndAddToMap, getAndConvertPublicKey, sendPublicKey }
+async function handshake(username, channel) {
+    try {
+        const pubkeyMap = new Map();
+        const { keyPair, exportedPublicKey } = await generateAndAddToMap(username, pubkeyMap);
+        const secretkey = await getAndConvertPublicKey(exportPublicKey, username, pubkeyMap, keyPair.privateKey);
+        sendPublicKey(exportedPublicKey, username, channel);
+        showToast("Public keys exchanged!", "success");
+        return secretkey;
+
+    } catch (e) {
+        showToast(e, "danger");
+        console.log(e);
+    }
+}
+
+export { handshake }
