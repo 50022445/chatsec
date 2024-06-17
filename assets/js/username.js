@@ -23,7 +23,7 @@ function usernameForm() {
 
     portal.appendChild(modalContainer);
     // Add blur class to the body
-    root.classList.add('blur-sm')
+    root.classList.add('blur-2xl')
     // Show the modal
     document.getElementById('usernameModal').style.display = 'flex';
 
@@ -31,7 +31,7 @@ function usernameForm() {
     function closeModal() {
       document.getElementById('usernameModal').style.display = 'none';
       portal.removeChild(modalContainer);
-      root.classList.remove('blur-sm');
+      root.classList.remove('blur-2xl');
     }
 
     // Add event listener to close the modal
