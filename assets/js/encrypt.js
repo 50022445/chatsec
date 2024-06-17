@@ -14,9 +14,9 @@ async function generateKeyPair() {
     return keyPair;
 }
 
-function deriveSecretKey(privateKey, publicKey) {
+async function deriveSecretKey(privateKey, publicKey) {
     try {
-        const secretKey = crypto.subtle.deriveKey({
+        const secretKey = await crypto.subtle.deriveKey({
                 name: "ECDH",
                 public: publicKey,
             },

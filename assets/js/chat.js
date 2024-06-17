@@ -9,9 +9,6 @@ import {
     showToast
 } from "./toast";
 
-import { handshake } from "./handshake"
-
-
 async function redirectUserToChat() {
     window.location = '/chat/create'
 }
@@ -30,20 +27,6 @@ function renderOnlineUsers(presence, channel) {
     }) => {
         userList.push(id);
         response += `<li class="flex items-center">${svgIcon}${id}</li>`;
-        if (userList.length === 2) {
-            const exchangeButton = document.createElement('button');
-            exchangeButton.className = "bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded";
-            exchangeButton.textContent = "Exchange keys";
-            exchangeButton.id = "exchange";
-            exchangeButton.onclick = handshake(id, channel)
-
-            const cta = document.getElementById('CTA');
-            const exchangeButtonId = document.getElementById('exchange');
-
-            if (!cta.contains(exchangeButtonId)) {
-                cta.prepend(exchangeButton);
-            }
-        }
     });
 
     const usernamesDiv = document.getElementById('usernames');

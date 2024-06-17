@@ -13,13 +13,14 @@ async function generateAndAddToMap(username, pubkeyMap) {
     }
 }
 
-async function getAndConvertPublicKey(exportedPublicKey, username, pubkeyMap, privateKey) {
-    if (pubkeyMap.has(exportedPublicKey)) {
+async function getAndConvertPublicKey(publicKey, username, pubkeyMap, privateKey, exportedPublicKey, channel) {
+    if (pubkeyMap.has(publicKey)) {
         console.log(`Public key already stored from user: ${username}`)
     } else {
-        pubkeyMap.set(exportedPublicKey, username)
-        console.log(`New key inserted from user: ${username}`, exportPublicKey)
-        let convertedPublicKey = await importPublicKey(exportedPublicKey)
+        pubkeyMap.set(publicKey, username)
+        console.log(`New key inserted from user: ${username}`, publicKey);
+        sendPublicKey(exportedPublicKey, username, channel);
+        let convertedPublicKey = await importPublicKey(publicKey)
         return await deriveSecretKey(privateKey, convertedPublicKey);
     }
 }
@@ -35,19 +36,21 @@ function sendPublicKey(exportedPublicKey, username, channel) {
     }
 }
 
-async function handshake(username, channel) {
-    try {
-        const pubkeyMap = new Map();
-        const { keyPair, exportedPublicKey } = await generateAndAddToMap(username, pubkeyMap);
-        const secretkey = await getAndConvertPublicKey(exportPublicKey, username, pubkeyMap, keyPair.privateKey);
-        sendPublicKey(exportedPublicKey, username, channel);
-        showToast("Public keys exchanged!", "success");
-        return secretkey;
 
-    } catch (e) {
-        showToast(e, "danger");
-        console.log(e);
-    }
+async function handshake(channel, username) {
+    let secretKey;
+    const pubkeyMap = new Map;
+
+    const { keyPair, exportedPublicKey } = await generateAndAddToMap(username, pubkeyMap)
+    sendPublicKey(exportedPublicKey, username, channel);
+
+    channel.on("publickey", async (payload) => {
+        let pubkey = payload.publickey;
+        let user = payload.username;
+        if (pubkey != exportedPublicKey){
+            secretKey = await getAndConvertPublicKey(pubkey, user, pubkeyMap, keyPair.privateKey, exportedPublicKey, channel);
+        }
+    });
 }
 
 export { handshake }

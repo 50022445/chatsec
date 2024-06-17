@@ -3,7 +3,8 @@ defmodule ChatsecWeb.RoomChannel do
   alias ChatsecWeb.Presence
   alias ChatsecWeb.ChannelState
 
-  def join("room:" <> private_room_id, %{"username" => username}, socket) when is_binary(username) do
+  def join("room:" <> private_room_id, %{"username" => username}, socket)
+      when is_binary(username) do
     send(self(), {:after_join, username})
     ChannelState.join(private_room_id, username)
     {:ok, assign(socket, user_id: username, room_id: private_room_id)}
@@ -14,6 +15,7 @@ defmodule ChatsecWeb.RoomChannel do
       "publickey" => publickey,
       "username" => username
     })
+
     {:noreply, socket}
   end
 
@@ -36,25 +38,26 @@ defmodule ChatsecWeb.RoomChannel do
   # end
 
   def handle_in(
-    "new_msg",
-    %{"body" => body, "username" => username, "color" => color},
-    socket
-  ) do
+        "new_msg",
+        %{"body" => body, "username" => username, "color" => color},
+        socket
+      ) do
+    # payload = %{message: body, username: username}
+    # spawn(fn -> save_messages(payload) end)
 
-# payload = %{message: body, username: username}
-# spawn(fn -> save_messages(payload) end)
+    broadcast!(socket, "new_msg", %{
+      "body" => body,
+      "username" => username,
+      "color" => color
+    })
 
-broadcast!(socket, "new_msg", %{
-  "body" => body,
-  "username" => username,
-  "color" => color
-})
-{:noreply, socket}
-end
+    {:noreply, socket}
+  end
 
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =
       Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
+      broadcast!(socket, "after_join", %{"username" => username})
 
     push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
