@@ -33,24 +33,21 @@
 
 <script type="text/javascript">
   window.addEventListener("load", (event) => {
-    let secretKey;
     let username = sessionStorage.getItem('username');
     let channel = connectToChannel(username)
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
-
     sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
-
-  const messages = document.getElementById('messages');
-
-  function autoScroll() {
-    messages.scrollTop = messages.scrollHeight;
-  }
-  const observer = new MutationObserver(() => {
-    autoScroll();
+    
+    const messages = document.getElementById('messages');
+    function autoScroll() {
+      messages.scrollTop = messages.scrollHeight;
+    }
+    const observer = new MutationObserver(() => {
+      autoScroll();
+    });
+    observer.observe(messages, {
+      childList: true
+    });
   });
-  observer.observe(messages, {
-    childList: true
-  });
-});
 </script>

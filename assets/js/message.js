@@ -1,13 +1,6 @@
-import {
-    handshake
-} from "./handshake"
-
 let xd = () => Math.floor(Math.random() * 255);
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
-    let secretKey = await handshake(channel, username);
-    console.log(secretKey);
-
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
     chatInput.addEventListener("keypress", async (event) => {
         if (!event.shiftKey && event.key === 'Enter') {
