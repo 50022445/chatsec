@@ -1,5 +1,6 @@
 import {
-    Socket, Presence
+    Socket,
+    Presence
 } from "phoenix";
 import {
     usernameForm
@@ -13,20 +14,37 @@ async function redirectUserToChat() {
 }
 
 function renderOnlineUsers(presence) {
+    let userList = []
     let response = "";
     const svgIcon = `
       <svg class="w-6 h-6 text-emerald-500 inline-block mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
       </svg>
     `;
-  
-    presence.list((id, {metas: [first, ...rest]}) => {
-      response += `<li class="flex items-center rounded-lg">${svgIcon}${id}</li>`;
+
+    presence.list((id, {
+        metas: [first, ...rest]
+    }) => {
+        userList.push(id);
+        response += `<li class="flex items-center">${svgIcon}${id}</li>`;
+        if (userList.length === 2) {
+            const exchangeButton = document.createElement('button');
+            exchangeButton.className = "bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded";
+            exchangeButton.textContent = "Exchange keys";
+            exchangeButton.id = "exchange"
+
+            const cta = document.getElementById('CTA')
+            const exchangeButtonId = document.getElementById('exchange');
+
+            if (!cta.contains(exchangeButtonId)) {
+                cta.prepend(exchangeButton);
+            }
+        } 
     });
 
     const usernamesDiv = document.getElementById('usernames');
     usernamesDiv.innerHTML = response;
-  }
+}
 
 function connectToChannel(username) {
     if (username != null) {

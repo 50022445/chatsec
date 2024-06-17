@@ -54,7 +54,7 @@ end
 
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =
-      Presence.track(socket, username, %{online_at: inspect(System.system_time(:second))})
+      Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
 
     push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
