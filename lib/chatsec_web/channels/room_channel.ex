@@ -1,9 +1,10 @@
 defmodule ChatsecWeb.RoomChannel do
   use Phoenix.Channel
+  alias ChatsecWeb.Presence
   alias ChatsecWeb.ChannelState
 
   def join("room:" <> private_room_id, %{"username" => username}, socket) when is_binary(username) do
-    send(self(), {:user_joined, username})
+    send(self(), {:after_join, username})
     ChannelState.join(private_room_id, username)
     {:ok, assign(socket, user_id: username, room_id: private_room_id)}
   end
@@ -51,8 +52,11 @@ broadcast!(socket, "new_msg", %{
 {:noreply, socket}
 end
 
-  def handle_info({:user_joined, username}, socket) do
-    broadcast!(socket, "user_joined", %{"username" => username})
+  def handle_info({:after_join, username}, socket) do
+    {:ok, _} =
+      Presence.track(socket, username, %{online_at: inspect(System.system_time(:second))})
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 
