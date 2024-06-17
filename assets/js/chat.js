@@ -15,13 +15,13 @@ async function redirectUserToChat() {
 function renderOnlineUsers(presence) {
     let response = "";
     const svgIcon = `
-      <svg class="w-6 h-6 text-emerald-700 inline-block mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6 text-emerald-500 inline-block mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
       </svg>
     `;
   
     presence.list((id, {metas: [first, ...rest]}) => {
-      response += `<li class="flex items-center p-2 bg-gray-800 rounded-lg">${svgIcon}${id}</li>`;
+      response += `<li class="flex items-center rounded-lg">${svgIcon}${id}</li>`;
     });
 
     const usernamesDiv = document.getElementById('usernames');
