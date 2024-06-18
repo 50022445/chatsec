@@ -19,7 +19,6 @@ import "phoenix_html"
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
-import { generateKeyPair } from "./encrypt.js"
 import { usernameForm } from "./username.js"
 import { redirectUserToChat, connectToChannel, showDeleteChatModal } from "./chat.js"
 import { copyChatUrl } from "./link.js"
@@ -57,6 +56,5 @@ window.usernameForm = usernameForm
 window.showDeleteChatModal = showDeleteChatModal
 window.redirectUserToChat = redirectUserToChat
 window.connectToChannel = connectToChannel
-window.generateKeyPair = generateKeyPair
 window.liveSocket = liveSocket
 
