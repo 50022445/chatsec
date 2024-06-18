@@ -22,14 +22,13 @@ defmodule ChatsecWeb.RoomChannel do
 
   def handle_in(
         "new_msg",
-        %{"body" => body, "username" => username, "iv" => iv, "color" => color},
+        %{"body" => body, "username" => username, "iv" => iv},
         socket
       ) do
     broadcast!(socket, "new_msg", %{
       "body" => body,
       "username" => username,
       "iv" => iv,
-      "color" => color
     })
 
     {:noreply, socket}

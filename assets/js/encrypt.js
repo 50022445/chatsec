@@ -50,7 +50,7 @@ function encodeBase64(arrayBuffer) {
     return btoa(binary);
 }
   
-  // Decode a base64 string back into it's original state
+// Decode a base64 string back into it's original state
 function decodeBase64(base64) {
     let binary = atob(base64);
     let len = binary.length;
