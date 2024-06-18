@@ -1,3 +1,5 @@
+import { showToast } from "./toast"
+
 async function generateKeyPair() {
     const keyPair = await crypto.subtle.generateKey({
             name: "ECDH",
@@ -7,12 +9,14 @@ async function generateKeyPair() {
         ["deriveKey"],
     );
 
+    // console("Keys generated.", "success")
+    console.log("keys generated");
     return keyPair;
 }
 
-function deriveSecretKey(privateKey, publicKey) {
+async function deriveSecretKey(privateKey, publicKey) {
     try {
-        const secretKey = crypto.subtle.deriveKey({
+        const secretKey = await crypto.subtle.deriveKey({
                 name: "ECDH",
                 public: publicKey,
             },
@@ -42,6 +46,7 @@ function encodeBase64(arrayBuffer) {
     for (let i = 0; i < len; i++) {
         binary += String.fromCharCode(bytes[i]);
     }
+    console.log("encode Base64:", binary);
     return btoa(binary);
 }
   
@@ -59,7 +64,6 @@ function decodeBase64(base64) {
 async function encryptMessage(secretKey, message) {
     try {
         const iv = crypto.getRandomValues(new Uint8Array(12));
-        // console.log("Originele IV:", iv);
         let encoded_message = getMessageEncoding(message);
         let encryptedMessage = await crypto.subtle.encrypt({
                 name: "AES-GCM",
