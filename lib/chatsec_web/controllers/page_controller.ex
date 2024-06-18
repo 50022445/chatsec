@@ -24,10 +24,17 @@ defmodule ChatsecWeb.PageController do
   end
 
   def chat(conn, %{"chat_id" => chatid}) do
-    if chatid in ChannelState.get_rooms() do
+    if chatid in ChannelState.get_rooms() and check_if_private(chatid) do
       render(conn, :chat, layout: false)
     else
       render(conn, :room_not_found, layout: false)
+    end
+  end
+
+  defp check_if_private(chatid) do
+    users_in_chat = ChannelState.list_users(chatid)
+    if Enum.count(users_in_chat) < 2 do
+      true
     end
   end
 end
