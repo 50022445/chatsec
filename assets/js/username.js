@@ -14,7 +14,6 @@ function usernameForm() {
           </div>
         </div>
       `;
-    // Create a div element and set its innerHTML to the modal HTML
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHTML;
 
@@ -22,25 +21,20 @@ function usernameForm() {
     const root = document.getElementById('root');
 
     portal.appendChild(modalContainer);
-    // Add blur class to the body
     root.classList.add('blur-2xl')
-    // Show the modal
     document.getElementById('usernameModal').style.display = 'flex';
 
-    // Function to close the modal and remove it from the DOM
     function closeModal() {
       document.getElementById('usernameModal').style.display = 'none';
       portal.removeChild(modalContainer);
       root.classList.remove('blur-2xl');
     }
 
-    // Add event listener to close the modal
     document.getElementById('closeModalButton').addEventListener('click', function () {
       closeModal();
       showToast('Username not set.', "danger");
     });
 
-    // Add event listener to handle form submission
     document.getElementById('submitModalButton').addEventListener('click', function () {
       const username = document.getElementById('usernameInput').value;
       if (username) {

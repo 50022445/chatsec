@@ -11,48 +11,49 @@ defmodule ChatsecWeb.RoomChannel do
   end
 
   def handle_in("publickey", %{"publickey" => publickey, "username" => username}, socket) do
-    broadcast!(socket, "publickey", %{
-      "publickey" => publickey,
-      "username" => username
-    })
-
+    broadcast!(socket, "publickey", %{"publickey" => publickey, "username" => username})
     {:noreply, socket}
   end
 
-  # def handle_in(
-  #       "new_msg",
-  #       %{"body" => body, "username" => username, "iv" => iv, "color" => color},
-  #       socket
-  #     ) do
-
-  #   # payload = %{message: body, username: username}
-  #   # spawn(fn -> save_messages(payload) end)
-
-  #   broadcast!(socket, "new_msg", %{
-  #     "body" => body,
-  #     "username" => username,
-  #     "iv" => iv,
-  #     "color" => color
-  #   })
-  #   {:noreply, socket}
-  # end
+  def handle_in("publickey_ack", %{"username" => username}, socket) do
+    broadcast!(socket, "publickey_ack", %{"username" => username})
+    {:noreply, socket}
+  end
 
   def handle_in(
         "new_msg",
-        %{"body" => body, "username" => username, "color" => color},
+        %{"body" => body, "username" => username, "iv" => iv, "color" => color},
         socket
       ) do
+
     # payload = %{message: body, username: username}
     # spawn(fn -> save_messages(payload) end)
 
     broadcast!(socket, "new_msg", %{
       "body" => body,
       "username" => username,
+      "iv" => iv,
       "color" => color
     })
-
     {:noreply, socket}
   end
+
+  # def handle_in(
+  #       "new_msg",
+  #       %{"body" => body, "username" => username, "color" => color},
+  #       socket
+  #     ) do
+  #   # payload = %{message: body, username: username}
+  #   # spawn(fn -> save_messages(payload) end)
+
+  #   broadcast!(socket, "new_msg", %{
+  #     "body" => body,
+  #     "username" => username,
+  #     "color" => color
+  #   })
+
+  #   {:noreply, socket}
+  # end
 
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =

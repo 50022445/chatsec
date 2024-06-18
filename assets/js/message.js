@@ -1,6 +1,10 @@
+import { handshake } from "./handshake";
+import { encryptMessage, decryptMessage } from "./encrypt";
 let xd = () => Math.floor(Math.random() * 255);
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
+    let secretKey = await handshake(channel, username);
+    console.log(secretKey);
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
     chatInput.addEventListener("keypress", async (event) => {
         if (!event.shiftKey && event.key === 'Enter') {
@@ -9,10 +13,13 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
                 return;
             } else {
                 try {
+                    const { encryptedMessage, iv } = await encryptMessage(secretKey, msg);
+                    console.log(encryptedMessage, iv);
                     channel.push("new_msg", {
                         username: username,
-                        body: msg,
-                        color: rgb_string
+                        body: encryptedMessage,
+                        color: rgb_string,
+                        iv: iv
                     });
                     chatInput.value = "";
                     event.preventDefault();
@@ -29,12 +36,13 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
             if (payload.body) {
                 let usernameItem = document.createElement("span");
                 let messageItem = document.createElement("p");
+                const decryptedMessage = await decryptMessage(secretKey, payload.body, payload.iv)
 
                 usernameItem.className = "username";
                 usernameItem.style.color = `rgb(${payload.color})`;
 
                 usernameItem.innerText = payload.username;
-                messageItem.innerText = payload.body;
+                messageItem.innerText = decryptedMessage;
 
                 let divContainer = document.createElement("div");
                 divContainer.appendChild(usernameItem);

@@ -13,7 +13,7 @@ async function redirectUserToChat() {
     window.location = '/chat/create'
 }
 
-function renderOnlineUsers(presence, channel) {
+function renderOnlineUsers(presence) {
     let userList = []
     let response = "";
     const svgIcon = `
@@ -90,7 +90,7 @@ function showDeleteChatModal() {
 
     portal.appendChild(modalContainer);
     // Add blur class to the body
-    root.classList.add('blur-sm')
+    root.classList.add('blur-2xl')
     // Show the modal
     document.getElementById('deleteChatModal').style.display = 'flex';
 
@@ -98,7 +98,7 @@ function showDeleteChatModal() {
     function closeModal() {
         document.getElementById('deleteChatModal').style.display = 'none';
         portal.removeChild(modalContainer);
-        root.classList.remove('blur-sm');
+        root.classList.remove('blur-2xl');
     }
 
     // Add event listener to close the modal

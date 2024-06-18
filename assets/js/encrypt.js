@@ -27,7 +27,6 @@ async function deriveSecretKey(privateKey, publicKey) {
             true,
             ["encrypt", "decrypt"],
         );
-        console.log("derive key:", secretKey);
         return secretKey;
     } catch (e) {
         console.log("Something went wrong!", e)
@@ -65,7 +64,6 @@ function decodeBase64(base64) {
 async function encryptMessage(secretKey, message) {
     try {
         const iv = crypto.getRandomValues(new Uint8Array(12));
-        // console.log("Originele IV:", iv);
         let encoded_message = getMessageEncoding(message);
         let encryptedMessage = await crypto.subtle.encrypt({
                 name: "AES-GCM",
