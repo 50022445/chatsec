@@ -1,10 +1,14 @@
-import { handshake } from "./handshake";
-import { encryptMessage, decryptMessage } from "./encrypt";
+import {
+    handshake
+} from "./handshake";
+import {
+    encryptMessage,
+    decryptMessage
+} from "./encrypt";
 let xd = () => Math.floor(Math.random() * 255);
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
     let secretKey = await handshake(channel, username);
-    console.log(secretKey);
     let rgb_string = `${xd()}, ${xd()}, ${xd()}`;
     chatInput.addEventListener("keypress", async (event) => {
         if (!event.shiftKey && event.key === 'Enter') {
@@ -13,8 +17,10 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
                 return;
             } else {
                 try {
-                    const { encryptedMessage, iv } = await encryptMessage(secretKey, msg);
-                    console.log(encryptedMessage, iv);
+                    const {
+                        encryptedMessage,
+                        iv
+                    } = await encryptMessage(secretKey, msg);
                     channel.push("new_msg", {
                         username: username,
                         body: encryptedMessage,

@@ -25,40 +25,21 @@ defmodule ChatsecWeb.RoomChannel do
         %{"body" => body, "username" => username, "iv" => iv, "color" => color},
         socket
       ) do
-
-    # payload = %{message: body, username: username}
-    # spawn(fn -> save_messages(payload) end)
-
     broadcast!(socket, "new_msg", %{
       "body" => body,
       "username" => username,
       "iv" => iv,
       "color" => color
     })
+
     {:noreply, socket}
   end
-
-  # def handle_in(
-  #       "new_msg",
-  #       %{"body" => body, "username" => username, "color" => color},
-  #       socket
-  #     ) do
-  #   # payload = %{message: body, username: username}
-  #   # spawn(fn -> save_messages(payload) end)
-
-  #   broadcast!(socket, "new_msg", %{
-  #     "body" => body,
-  #     "username" => username,
-  #     "color" => color
-  #   })
-
-  #   {:noreply, socket}
-  # end
 
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =
       Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
-      broadcast!(socket, "after_join", %{"username" => username})
+
+    broadcast!(socket, "after_join", %{"username" => username})
 
     push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
@@ -70,9 +51,4 @@ defmodule ChatsecWeb.RoomChannel do
       _ -> :ok
     end
   end
-
-  # defp save_messages(attrs) do
-  #   Chatsec.Message.changeset(%Chatsec.Message{}, attrs)
-  #   |> Chatsec.Repo.insert()
-  # end
 end

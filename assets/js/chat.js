@@ -52,7 +52,6 @@ function connectToChannel(username) {
 
         channel.join()
             .receive("ok", _ => {
-                console.log("Joined successfully:  ", username);
             })
             .receive("error", resp => {
                 console.log("Unable to join", resp);
