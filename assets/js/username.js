@@ -35,6 +35,20 @@ function usernameForm() {
       showToast('Username not set.', "danger");
     });
 
+    document.getElementById('usernameInput').addEventListener('keypress', async (event) => {
+      if (event.key === 'Enter') {
+        const username = document.getElementById('usernameInput').value;
+        if (username) {
+          sessionStorage.setItem('username', username);
+          closeModal();
+          showToast("Username set.", "success")
+          resolve(username);
+        } else {
+          alert('Please enter a username');
+        }
+      }
+    });
+
     document.getElementById('submitModalButton').addEventListener('click', function () {
       const username = document.getElementById('usernameInput').value;
       if (username) {
