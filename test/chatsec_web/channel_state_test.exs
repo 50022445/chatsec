@@ -15,11 +15,16 @@ defmodule ChatsecWeb.ChannelStateTest do
     assert [] == ChannelState.get_rooms(pid)
   end
 
-  test "Add a new user to a chatroom", %{pid: pid} do
+  test "User joins a chatroom, then leaves", %{pid: pid} do
     room_id = UUID.uuid4()
+    user = "Slayer"
+
     assert :ok == ChannelState.create_room(pid, room_id)
     assert [room_id] == ChannelState.get_rooms(pid)
-    assert :ok == ChannelState.join(pid, room_id, "Slayer")
-    assert ["Slayer"] == ChannelState.list_users(pid, room_id)
+    assert :ok == ChannelState.join(pid, room_id, user)
+    assert [user] == ChannelState.list_users(pid, room_id)
+
+    assert :ok == ChannelState.leave(pid, room_id, user)
+    assert [] == ChannelState.list_users(pid, room_id)
   end
 end
