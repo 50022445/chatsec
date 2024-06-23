@@ -2,9 +2,12 @@ import re
 from playwright.sync_api import expect, sync_playwright
 import pytest
 import time
+from dotenv import load_dotenv
+import os
 
-IP = '10.10.0.123'
-PORT = '4001'
+load_dotenv()
+IP = os.getenv("IP")
+PORT = os.getenv("PORT")
 
 # Setup function always starts a new chat
 @pytest.fixture(scope="function")

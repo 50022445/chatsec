@@ -1,9 +1,13 @@
 import re
 from playwright.sync_api import expect, sync_playwright
 import pytest
+from dotenv import load_dotenv
+import os
 
-IP = '10.10.0.123'
-PORT = '4001'
+load_dotenv()
+IP = os.getenv("IP")
+PORT = os.getenv("PORT")
+
 
 @pytest.fixture(scope="function")
 def setup():
