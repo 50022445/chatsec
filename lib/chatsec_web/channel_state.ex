@@ -1,32 +1,33 @@
 defmodule ChatsecWeb.ChannelState do
   use GenServer
 
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+ def start_link(option) do
+    name = Keyword.get(option, :name, __MODULE__)
+    GenServer.start_link(__MODULE__, [], name: name)
   end
 
-  def get_rooms() do
-    GenServer.call(__MODULE__, {:list_rooms})
+  def get_rooms(pid \\ __MODULE__) do
+    GenServer.call(pid, {:list_rooms})
   end
 
-  def create_room(room_id) do
-    GenServer.call(__MODULE__, {:create, room_id})
+  def create_room(pid \\ __MODULE__, room_id) do
+    GenServer.call(pid, {:create, room_id})
   end
 
-  def delete_room(room_id) do
-    GenServer.call(__MODULE__, {:delete, room_id})
+  def delete_room(pid \\ __MODULE__, room_id) do
+    GenServer.call(pid, {:delete, room_id})
   end
 
-  def list_users(room_id) do
-    GenServer.call(__MODULE__, {:list_users, room_id})
+  def list_users(pid \\ __MODULE__, room_id) do
+    GenServer.call(pid, {:list_users, room_id})
   end
 
-  def join(room_id, identifier) do
-    GenServer.call(__MODULE__, {:join, room_id, identifier})
+  def join(pid \\ __MODULE__, room_id, identifier) do
+    GenServer.call(pid, {:join, room_id, identifier})
   end
 
-  def leave(room_id, identifier) do
-    GenServer.call(__MODULE__, {:leave, room_id, identifier})
+  def leave(pid \\ __MODULE__, room_id, identifier) do
+    GenServer.call(pid, {:leave, room_id, identifier})
   end
 
   @impl true
