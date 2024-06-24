@@ -1,7 +1,7 @@
 defmodule ChatsecWeb.ChannelState do
   use GenServer
 
- def start_link(option) do
+  def start_link(option) do
     name = Keyword.get(option, :name, __MODULE__)
     GenServer.start_link(__MODULE__, [], name: name)
   end
@@ -43,14 +43,12 @@ defmodule ChatsecWeb.ChannelState do
 
   @impl true
   def handle_call({:create, room_id}, _from, state) do
-    {:reply, :ok,
-      Map.put(state, room_id, [])}
+    {:reply, :ok, Map.put(state, room_id, [])}
   end
 
   @impl true
   def handle_call({:delete, room_id}, _from, state) do
-    {:reply, :ok,
-      Map.delete(state, room_id)}
+    {:reply, :ok, Map.delete(state, room_id)}
   end
 
   @impl true

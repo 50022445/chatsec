@@ -33,6 +33,7 @@ defmodule ChatsecWeb.PageController do
 
   defp check_if_private(chatid) do
     users_in_chat = ChannelState.list_users(chatid)
+
     if Enum.count(users_in_chat) < 2 do
       true
     end
