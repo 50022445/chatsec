@@ -17,10 +17,8 @@ defmodule ChatsecWeb.PageController do
   def delete_room(conn, %{"chat_id" => chatid}) do
     if chatid in ChannelState.get_rooms() do
       ChannelState.delete_room(chatid)
-      redirect(conn, to: ~p"/")
-    else
-      render(conn, :room_not_found, layout: false)
     end
+    redirect(conn, to: ~p"/")
   end
 
   def chat(conn, %{"chat_id" => chatid}) do
