@@ -39,9 +39,9 @@ def test_e2ee_conversation(setup):
     bob.goto(chatroom)
     bob.get_by_placeholder("Username").fill("Bob")
     bob.click("text='Submit'")
-    message = "Hey Alice!"
 
-    time.sleep(3) # Wait for the handshake to succeed
+    bob.locator("text='Handshake completed!'").wait_for(state="visible") # Wait for the handshake to succeed
+    message = "Hey Alice!"
     bob.get_by_placeholder("Write a message..").fill(message)
     bob.keyboard.press('Enter')
     messages = alice.locator("div:has-text('Messages.')")
