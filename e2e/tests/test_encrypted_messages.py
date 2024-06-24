@@ -12,7 +12,7 @@ PORT = os.getenv("PORT")
 @pytest.fixture(scope="function")
 def setup():
     with sync_playwright() as playwright:
-        browser = playwright.firefox.launch(headless=True)
+        browser = playwright.firefox.launch(headless=False)
 
         context_alice = browser.new_context(ignore_https_errors=True)
         page_alice = context_alice.new_page()
@@ -34,13 +34,14 @@ def test_e2ee_conversation(setup):
     # Wait for the URL to match the regex pattern for UUID4
     alice.wait_for_url(re.compile(r"/chat/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"))
     chatroom = alice.url
+    time.sleep(1)
 
     bob = setup['page_bob']
     bob.goto(chatroom)
     bob.get_by_placeholder("Username").fill("Bob")
     bob.click("text='Submit'")
 
-    bob.locator("text='Handshake completed!'").wait_for(state="visible") # Wait for the handshake to succeed
+    bob.locator("text='Handshake completed!'").wait_for(state="visible")# Wait for the handshake to succeed
     message = "Hey Alice!"
     bob.get_by_placeholder("Write a message..").fill(message)
     bob.keyboard.press('Enter')
