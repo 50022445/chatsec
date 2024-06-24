@@ -15,11 +15,6 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("publickey_ack", %{"username" => username}, socket) do
-    broadcast!(socket, "publickey_ack", %{"username" => username})
-    {:noreply, socket}
-  end
-
   def handle_in(
         "new_msg",
         %{"body" => body, "username" => username, "iv" => iv},
@@ -34,6 +29,7 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  @spec handle_info({:after_join, any()}, Phoenix.Socket.t()) :: {:noreply, Phoenix.Socket.t()}
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =
       Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
