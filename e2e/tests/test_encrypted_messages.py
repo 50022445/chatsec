@@ -12,7 +12,7 @@ PORT = os.getenv("PORT")
 @pytest.fixture(scope="function")
 def setup():
     with sync_playwright() as playwright:
-        browser = playwright.firefox.launch(headless=False)
+        browser = playwright.firefox.launch(headless=True)
 
         context_alice = browser.new_context(ignore_https_errors=True)
         page_alice = context_alice.new_page()
