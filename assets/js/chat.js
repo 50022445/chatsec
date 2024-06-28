@@ -9,7 +9,7 @@ import {
     showToast
 } from "./toast";
 
-async function redirectUserToChat() {
+function redirectUserToChat() {
     window.location = '/chat/create'
 }
 
@@ -33,40 +33,53 @@ function renderOnlineUsers(presence) {
     usernamesDiv.innerHTML = response;
 }
 
-function connectToChannel(username) {
-    if (username != null) {
-        const socket = new Socket("/socket", {
-            params: {
-                username: username
+function connectToChannel(username, callback) {
+    username = username ? ? sessionStorage.getItem('username');
+    if (!username) {
+        // Handle the case where username is not provided
+        usernameForm().then((resolvedUsername) => {
+            sessionStorage.setItem("username", resolvedUsername);
+            connectToChannel(resolvedUsername, callback);
+        }).catch((error) => {
+            console.log("Username form error:", error);
+            showToast("Unable to get username.", "danger");
+        });
+        return; // Exit early while awaiting username resolution
+    }
+
+
+    const socket = new Socket("/socket", {
+        params: {
+            username: username
+        }
+    });
+
+    socket.connect();
+
+    const uuid = window.location.href.split("/").slice(-1)[0];
+    const channel = socket.channel(`room:${uuid}`, {
+        username: username
+    });
+
+    let presence = new Presence(channel);
+    presence.onSync(() => renderOnlineUsers(presence, channel));
+
+    channel.join()
+        .receive("ok", () => {
+            showToast("Connected to channel.", "success");
+            // Invoke the callback with the channel
+            if (callback) {
+                callback(channel, username);
             }
         })
+        .receive("error", (resp) => {
+            console.log("Unable to join", resp);
+            showToast("Unable to join channel.", "danger");
+        });
 
-        socket.connect()
-        const uuid = window.location.href.split("/").slice(-1)[0]
-        let channel = socket.channel(`room:${uuid}`, {
-            username: username
-        })
-
-        let presence = new Presence(channel)
-        presence.onSync(() => renderOnlineUsers(presence, channel))
-
-        channel.join()
-            .receive("ok", _ => {
-            })
-            .receive("error", resp => {
-                console.log("Unable to join", resp);
-            });
-
-        showToast("Connected to channel.", "success")
-        return channel
-    } else {
-        usernameForm().then((username) => {
-            connectToChannel(username)
-            location.reload();
-            showToast("Connected to channel.", "success")
-        })
-    }
+    return channel;
 }
+
 
 function showDeleteChatModal() {
     const modalHTML = `

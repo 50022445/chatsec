@@ -46,12 +46,12 @@
 </div>
 
 <script type="text/javascript">
-  window.addEventListener("load", (event) => {
-    let username = sessionStorage.getItem('username');
-    let channel = connectToChannel(username)
+  document.addEventListener("DOMContentLoaded", () => {
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
-    sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
+    connectToChannel(null, (channel, username) => {
+      sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
+    });
     
     const messages = document.getElementById('messages');
     function autoScroll() {
