@@ -5,6 +5,7 @@ import {
     encryptMessage,
     decryptMessage
 } from "./encrypt";
+import { roomDeleted } from "./chat";
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
     let secretKey = await handshake(channel, username);
@@ -65,6 +66,10 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
             console.error("Something went wrong:", error);
         }
     });
+
+    channel.on("room_deleted", payload => {
+        roomDeleted();
+    })
 }
 
 export {

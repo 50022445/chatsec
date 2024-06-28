@@ -20,7 +20,7 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import { usernameForm } from "./username.js"
-import { redirectUserToChat, connectToChannel, showDeleteChatModal } from "./chat.js"
+import { redirectUserToChat, connectToChannel, showDeleteChatModal, roomDeleted } from "./chat.js"
 import { copyChatUrl } from "./link.js"
 import { handshake } from "./handshake.js"
 import { sendAndReceiveMessages } from "./message.js"
@@ -49,6 +49,7 @@ liveSocket.connect()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.roomDeleted = roomDeleted
 window.sendAndReceiveMessages = sendAndReceiveMessages
 window.handshake = handshake
 window.copyChatUrl = copyChatUrl

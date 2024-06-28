@@ -23,7 +23,7 @@
           Invite user
         </button>
         <button
-          onclick="showDeleteChatModal()"
+          id="showDeleteChatModal"
           class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
         >
           Delete
@@ -49,8 +49,11 @@
   document.addEventListener("DOMContentLoaded", () => {
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
-    connectToChannel(null, (channel, username) => {
+    let { channel, username } = connectToChannel(null, (channel, username) => {
       sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
+    });
+    document.getElementById('showDeleteChatModal').addEventListener('click', function () {
+        showDeleteChatModal(channel, username);
     });
     
     const messages = document.getElementById('messages');

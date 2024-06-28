@@ -77,11 +77,11 @@ function connectToChannel(username, callback) {
             showToast("Unable to join channel.", "danger");
         });
 
-    return channel;
+    return { channel, username };
 }
 
 
-function showDeleteChatModal() {
+function showDeleteChatModal(channel, username) {
     const modalHTML = `
     <div id="deleteChatModal" class="modal fixed inset-0 flex items-center justify-center z-50">
     <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
@@ -121,17 +121,63 @@ function showDeleteChatModal() {
     // Add event listener to handle form submission
     document.getElementById('submitModalButton').addEventListener('click', function () {
         closeModal();
-        deleteChat();
+        deleteChat(channel, username);
     });
 }
 
-function deleteChat() {
+function deleteChat(channel, username) {
+    try {
+        channel.push("adios", {
+            username: username 
+        })
+    } catch (e) {
+        console.error("Deleting room failed:", error);
+    }
+
     const uuid = window.location.href.split("/").slice(-1)[0]
     window.location = `/chat/delete/${uuid}`
+}
+
+function roomDeleted() {
+    const modalHTML = `
+    <div id="roomDeletedModal" class="modal fixed inset-0 flex items-center justify-center z-50">
+    <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 class="text-2xl font-bold text-white mb-4 text-center">This room has been deleted.</h2>
+      <div class="mt-3 flex justify-center items-center space-x-3">
+      <a
+        href="/"
+        class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Go home
+      </a>
+      <p class="text-white">or</p>
+      <button
+        onclick="redirectUserToChat()"
+        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Create new room
+      </button>
+    </div>
+        </div>
+    </div>
+        `;
+    // Create a div element and set its innerHTML to the modal HTML
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHTML;
+
+    const portal = document.getElementById('portal');
+    const root = document.getElementById('root');
+
+    portal.appendChild(modalContainer);
+    // Add blur class to the body
+    root.classList.add('blur-2xl')
+    // Show the modal
+    document.getElementById('roomDeletedModal').style.display = 'flex';
 }
 
 export {
     redirectUserToChat,
     connectToChannel,
-    showDeleteChatModal
+    showDeleteChatModal,
+    roomDeleted
 }
