@@ -34,7 +34,7 @@ function renderOnlineUsers(presence) {
 }
 
 function connectToChannel(username, callback) {
-    username = username ? ? sessionStorage.getItem('username');
+    username = username ?? sessionStorage.getItem('username');
     if (!username) {
         // Handle the case where username is not provided
         usernameForm().then((resolvedUsername) => {
