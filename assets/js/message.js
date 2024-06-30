@@ -1,11 +1,9 @@
 import {
     handshake
 } from "./handshake";
-import {
-    encryptMessage,
-    decryptMessage
-} from "./encrypt";
+import { encryptMessage, decryptMessage } from "./encrypt";
 import { roomDeleted } from "./chat";
+import { showToast } from "./toast";
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
     let secretKey = await handshake(channel, username);
@@ -28,7 +26,7 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
                     chatInput.value = "";
                     event.preventDefault();
                 } catch (error) {
-                    console.error("Sending message failed:", error);
+                    showToast("Sending message failed!", "danger");
                 }
             }
         }
@@ -60,10 +58,10 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
 
                 messagesContainer.appendChild(divContainer);
             } else {
-                console.error("Invalid payload:", payload);
+                showToast("Invalid payload!", "danger");
             }
         } catch (error) {
-            console.error("Something went wrong:", error);
+            showToast("Something went wrong:", "danger");
         }
     });
 

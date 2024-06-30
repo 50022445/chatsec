@@ -55,8 +55,6 @@ async function handshake(channel, username) {
         let user = payload.username;
         if (user !== username) {
             if (!pubkeyMap.has(pubkey)) {
-                console.log({'my key': exportedPublicKey, 'other key': pubkey});
-                console.log("new secret created with:", pubkey);
                 secretKey = await getAndConvertPublicKey(pubkey, user, pubkeyMap, keyPair.privateKey);
                 // Send your public key back to the other user
                 syn(exportedPublicKey, username, channel);
@@ -73,7 +71,6 @@ async function handshake(channel, username) {
     }
 
     showToast("Handshake completed!", "success");
-    console.log(pubkeyMap);
     return secretKey;
 }
 

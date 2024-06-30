@@ -41,7 +41,6 @@ function connectToChannel(username, callback) {
             sessionStorage.setItem("username", resolvedUsername);
             connectToChannel(resolvedUsername, callback);
         }).catch((error) => {
-            console.log("Username form error:", error);
             showToast("Unable to get username.", "danger");
         });
         return; // Exit early while awaiting username resolution
@@ -73,7 +72,6 @@ function connectToChannel(username, callback) {
             }
         })
         .receive("error", (resp) => {
-            console.log("Unable to join", resp);
             showToast("Unable to join channel.", "danger");
         });
 
@@ -131,7 +129,7 @@ function deleteChat(channel, username) {
             username: username 
         })
     } catch (e) {
-        console.error("Deleting room failed:", error);
+        showToast("Deleting room failed!", "danger");
     }
 
     const uuid = window.location.href.split("/").slice(-1)[0]
