@@ -139,23 +139,12 @@ function deleteChat(channel, username) {
 function roomDeleted() {
     const modalHTML = `
     <div id="roomDeletedModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-    <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
-      <h2 class="text-2xl font-bold text-white mb-4 text-center">This room has been deleted.</h2>
-      <div class="mt-3 flex justify-center items-center space-x-3">
-      <a
-        href="/"
-        class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Go home
-      </a>
-      <p class="text-white">or</p>
-      <button
-        onclick="redirectUserToChat()"
-        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Create new room
-      </button>
-    </div>
+        <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 class="text-2xl font-bold text-white mb-4 text-center">This room has been deleted.</h2>
+            <div class="flex justify-center mt-4">
+                <button id="closeModalButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded mr-2">Go home</button>
+                <button id="submitModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">New room</button>
+            </div>
         </div>
     </div>
         `;
@@ -171,6 +160,27 @@ function roomDeleted() {
     root.classList.add('blur-2xl')
     // Show the modal
     document.getElementById('roomDeletedModal').style.display = 'flex';
+
+    // Function to close the modal and remove it from the DOM
+    function closeModal() {
+        document.getElementById('roomDeletedModal').style.display = 'none';
+        portal.removeChild(modalContainer);
+        root.classList.remove('blur-2xl');
+    }
+
+    function redirectToHomepage() {
+        closeModal();
+        location.href("/")
+    }
+
+    document.getElementById('closeModalButton').addEventListener('click', function () {
+        closeModal();
+    });
+
+    document.getElementById('submitModalButton').addEventListener('click', function () {
+        closeModal();
+        location.href = "/"
+    });
 }
 
 export {
