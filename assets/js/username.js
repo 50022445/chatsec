@@ -5,16 +5,18 @@ import {
 function usernameForm() {
     return new Promise((resolve, reject) => {
         const modalHTML = `
-          <div id="usernameModal" class="modal fixed inset-0 flex items-center justify-center blur-none z-50">
-              <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full blur-none">
-                  <h2 class="text-2xl font-bold text-white mb-4">Enter Username</h2>
-                  <input type="text" id="usernameInput" class="w-full p-2 border focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-500 rounded-md mb-4" placeholder="Username">
-                  <div class="flex justify-end">
-                      <button id="closeModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded mr-2">Cancel</button>
-                      <button id="submitModalButton" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">Submit</button>
-                  </div>
-              </div>
-          </div>
+        <div id="usernameModal" class="modal fixed inset-0 flex items-center justify-center blur-none z-50">
+        <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full blur-none">
+            <h2 class="text-2xl font-bold text-white mb-4">Enter Username</h2>
+            <input type="text" id="usernameInput" class="w-full p-2 border focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-500 rounded-md mb-4" placeholder="Username">
+            <div class="flex justify-end">
+                <button id="closeModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded mr-2 transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-md">Cancel</button>
+                <button id="randomModalButton" class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded mr-2 transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 shadow-md">Random</button>
+                <button id="submitModalButton" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 shadow-md">Submit</button>
+            </div>
+        </div>
+    </div>
+    
       `;
         const modalContainer = document.createElement('div');
         modalContainer.innerHTML = modalHTML;
@@ -25,6 +27,12 @@ function usernameForm() {
         portal.appendChild(modalContainer);
         root.classList.add('blur-2xl');
         document.getElementById('usernameModal').style.display = 'flex';
+        
+
+        document.getElementById('randomModalButton').addEventListener('click', () => {
+            let randomUsername = createRandomUsername();
+            document.getElementById('usernameInput').value = randomUsername;
+        });
 
         function closeModal() {
             document.getElementById('usernameModal').style.display = 'none';
@@ -60,6 +68,19 @@ function usernameForm() {
     });
 }
 
+function createRandomUsername() {
+    let words = ["elite", "difficulty", "horn", "value", "concentrate", "elaborate", "employ", "thin", "nonsense", "franchise", "drift", "assault", "association", "legend", "chop", "charity", "fist", "consensus", "whisper", "premium"];
+
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    let firstWord = words[getRandomInt(words.length)];
+    let secondWord = words[getRandomInt(words.length)];
+    let randomUsername = firstWord.charAt(0).toUpperCase() + firstWord.slice(1) + secondWord.charAt(0).toUpperCase() + secondWord.slice(1);
+    return randomUsername;
+}
+
 export {
-    usernameForm
-};
+    usernameForm,
+}

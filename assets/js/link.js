@@ -11,21 +11,21 @@ function copyToClipboard(url) {
 function copyChatUrl() {
   const url = location.href
   const modalHTML = `
-    <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-      <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
+  <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
+    <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
         <h2 class="text-2xl font-bold text-white mb-4">Invite users</h2>
         <div class="mb-4">
-          <input type="text" id="chatUrl" value="${url}" 
-          class="w-full p-2 border focus:outline-none focus:ring-2 
-          focus:ring-green-500 focus:border-transparent bg-gray-800 
-          text-white placeholder-gray-500 rounded-md" readonly>
+            <input type="text" id="chatUrl" value="${url}"
+                   class="w-full p-2 border focus:outline-none focus:ring-2
+                   focus:ring-green-500 focus:border-transparent bg-gray-800
+                   text-white placeholder-gray-500 rounded-md" readonly>
         </div>
         <div class="flex justify-end">
-          <button id="closeModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded mr-2">Cancel</button>
-          <button id="submitModalButton" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">Copy URL</button>
+            <button id="closeModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded mr-2 transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-md">Cancel</button>
+            <button id="submitModalButton" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 shadow-md">Copy URL</button>
         </div>
-      </div>
     </div>
+</div>
   `;
   // Create a div element and set its innerHTML to the modal HTML
   const modalContainer = document.createElement('div');
