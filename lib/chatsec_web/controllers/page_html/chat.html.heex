@@ -49,13 +49,15 @@
   document.addEventListener("DOMContentLoaded", () => {
     let chatInput = document.querySelector("#chat-input");
     let messagesContainer = document.querySelector("#messages");
-    let { channel, username } = connectToChannel(null, (channel, username) => {
+    checkAndConnect(null, (channel, username) => {
+      console.log(username, channel);
       sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
-    });
-    document.getElementById('showDeleteChatModal').addEventListener('click', function () {
+
+      document.getElementById('showDeleteChatModal').addEventListener('click', function () {
         showDeleteChatModal(channel, username);
-    });
-    
+        });
+      });
+     
     const messages = document.getElementById('messages');
     function autoScroll() {
       messages.scrollTop = messages.scrollHeight;

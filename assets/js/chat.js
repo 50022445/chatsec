@@ -33,7 +33,7 @@ function renderOnlineUsers(presence) {
     usernamesDiv.innerHTML = response;
 }
 
-function connectToChannel(username, callback) {
+function checkAndConnect(username, callback) {
     username = username ?? sessionStorage.getItem('username');
     if (!username) {
         // Handle the case where username is not provided
@@ -43,10 +43,12 @@ function connectToChannel(username, callback) {
         }).catch((error) => {
             showToast("Unable to get username.", "danger");
         });
-        return; // Exit early while awaiting username resolution
+        return;
     }
+    connectToChannel(username, callback);
+}
 
-
+function connectToChannel(username, callback) {
     const socket = new Socket("/socket", {
         params: {
             username: username
@@ -136,56 +138,8 @@ function deleteChat(channel, username) {
     window.location = `/chat/delete/${uuid}`
 }
 
-function roomDeleted() {
-    const modalHTML = `
-    <div id="roomDeletedModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-        <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 class="text-2xl font-bold text-white mb-4 text-center">This room has been deleted.</h2>
-            <div class="flex justify-center mt-4">
-                <button id="closeModalButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded mr-2">Go home</button>
-                <button id="submitModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">New room</button>
-            </div>
-        </div>
-    </div>
-        `;
-    // Create a div element and set its innerHTML to the modal HTML
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-
-    const portal = document.getElementById('portal');
-    const root = document.getElementById('root');
-
-    portal.appendChild(modalContainer);
-    // Add blur class to the body
-    root.classList.add('blur-2xl')
-    // Show the modal
-    document.getElementById('roomDeletedModal').style.display = 'flex';
-
-    // Function to close the modal and remove it from the DOM
-    function closeModal() {
-        document.getElementById('roomDeletedModal').style.display = 'none';
-        portal.removeChild(modalContainer);
-        root.classList.remove('blur-2xl');
-    }
-
-    function redirectToHomepage() {
-        closeModal();
-        location.href("/")
-    }
-
-    document.getElementById('closeModalButton').addEventListener('click', function () {
-        closeModal();
-    });
-
-    document.getElementById('submitModalButton').addEventListener('click', function () {
-        closeModal();
-        location.href = "/"
-    });
-}
-
 export {
     redirectUserToChat,
-    connectToChannel,
     showDeleteChatModal,
-    roomDeleted
+    checkAndConnect
 }

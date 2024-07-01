@@ -2,7 +2,6 @@ import {
     handshake
 } from "./handshake";
 import { encryptMessage, decryptMessage } from "./encrypt";
-import { roomDeleted } from "./chat";
 import { showToast } from "./toast";
 
 async function sendAndReceiveMessages(chatInput, username, channel, messagesContainer) {
@@ -66,7 +65,7 @@ async function sendAndReceiveMessages(chatInput, username, channel, messagesCont
     });
 
     channel.on("room_deleted", payload => {
-        roomDeleted();
+        window.location = "/";
     })
 }
 
