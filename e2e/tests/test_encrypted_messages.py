@@ -47,3 +47,11 @@ def test_e2ee_conversation(setup):
     bob.keyboard.press('Enter')
     messages = alice.locator("div:has-text('Messages.')")
     assert messages.locator(f"text={message}").is_visible(), "The message was not sent."
+
+    # Delete the room
+    bob.click("text='Delete room'")
+    bob.locator("text='Confirm deletion?'").wait_for(state="visible") # Wait for the delete modal to show up
+    bob.click("text='Delete chat'")
+    time.sleep(1)
+    
+    assert alice.url == f"https://{IP}:{PORT}/"
