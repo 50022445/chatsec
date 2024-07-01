@@ -54,4 +54,4 @@ def test_e2ee_conversation(setup):
     bob.click("text='Delete chat'")
     time.sleep(1)
     
-    assert alice.url == f"https://{IP}:{PORT}/"
+    assert alice.url == f"https://{IP}:{PORT}/", "The room was not deleted properly."
