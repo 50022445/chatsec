@@ -69,15 +69,15 @@ function usernameForm() {
 }
 
 function createRandomUsername() {
-    let words = ["elite", "difficulty", "horn", "value", "concentrate", "elaborate", "employ", "thin", "nonsense", "franchise", "drift", "assault", "association", "legend", "chop", "charity", "fist", "consensus", "whisper", "premium"];
-
+    const adjectives = ["utter", "level", "white", "misty", "rough", "inner", "faint", "windy", "plant", "elite", "sassy", "dirty", "large", "sable", "tight", "loose", "sweet", "awake", "obese", "swift"];
+    const verbs = ["shrug", "press", "visit", "dress", "drive", "value", "abuse", "slide", "taste", "shout", "chase", "house", "blame", "seize", "smash", "greet", "bloom", "breed", "boast", "range"];
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
-    let firstWord = words[getRandomInt(words.length)];
-    let secondWord = words[getRandomInt(words.length)];
-    let randomUsername = firstWord.charAt(0).toUpperCase() + firstWord.slice(1) + secondWord.charAt(0).toUpperCase() + secondWord.slice(1);
+    const firstWord = adjectives[getRandomInt(adjectives.length)];
+    const secondWord = verbs[getRandomInt(verbs.length)];
+    const randomUsername = firstWord.charAt(0).toUpperCase() + firstWord.slice(1) + secondWord.charAt(0).toUpperCase() + secondWord.slice(1);
     return randomUsername;
 }
 
