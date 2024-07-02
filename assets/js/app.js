@@ -24,6 +24,7 @@ import { redirectUserToChat, checkAndConnect, showDeleteChatModal } from "./chat
 import { copyChatUrl } from "./link.js"
 import { handshake } from "./handshake.js"
 import { sendAndReceiveMessages } from "./message.js"
+import { donateModal } from "./donate.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -49,6 +50,7 @@ liveSocket.connect()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.donateModal = donateModal
 window.sendAndReceiveMessages = sendAndReceiveMessages
 window.handshake = handshake
 window.copyChatUrl = copyChatUrl
