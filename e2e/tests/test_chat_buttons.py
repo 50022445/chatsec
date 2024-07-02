@@ -32,7 +32,7 @@ def test_copy_link_button(setup):
     page.click("text='Invite user'")
     page.click("text='Copy URL'")
     # Check for the "Copied to clipboard" message
-    assert page.is_visible("text='Link copied to clipboard.'"), "The 'Copied to clipboard' message did not appear."
+    assert page.is_visible("text='Copied to clipboard.'"), "The 'Copied to clipboard' message did not appear."
 
 def test_delete_room_button(setup):
     page = setup
