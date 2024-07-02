@@ -1,31 +1,34 @@
 function showToast(message, type) {
-    // Create the toast container if it doesn't exist
-    let toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.id = 'toast-container';
-        toastContainer.className = 'fixed bottom-4 right-4 space-y-2 z-50';
-        document.body.appendChild(toastContainer);
-    }
+	// Create the toast container if it doesn't exist
+	let toastContainer = document.getElementById("toast-container");
+	if (!toastContainer) {
+		toastContainer = document.createElement("div");
+		toastContainer.id = "toast-container";
+		toastContainer.className = "fixed bottom-4 right-4 space-y-2 z-50";
+		document.body.appendChild(toastContainer);
+	}
 
-    // Determine the classes and content based on the type
-    let icon, iconBgClass;
-    if (type === 'success') {
-        icon = `<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+	let icon;
+	let iconBgClass;
+	if (type === "success") {
+		icon = `<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                 </svg>`;
-        iconBgClass = 'bg-emerald-100 dark:bg-emerald-800 text-emerald-500 dark:text-emerald-200';
-    } else if (type === 'danger') {
-        icon = `<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+		iconBgClass =
+			"bg-emerald-100 dark:bg-emerald-800 text-emerald-500 dark:text-emerald-200";
+	} else if (type === "danger") {
+		icon = `<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
                 </svg>`;
-        iconBgClass = 'bg-pink-100 dark:bg-pink-800 text-pink-500 dark:text-pink-200';
-    }
+		iconBgClass =
+			"bg-pink-100 dark:bg-pink-800 text-pink-500 dark:text-pink-200";
+	}
 
-    // Create the toast element
-    const toast = document.createElement('div');
-    toast.className = `flex items-center w-full max-w-xs p-4 mb-4 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 text-white`;
-    toast.innerHTML = `
+	// Create the toast element
+	const toast = document.createElement("div");
+	toast.className =
+		"flex items-center w-full max-w-xs p-4 mb-4 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 text-white";
+	toast.innerHTML = `
         <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg ${iconBgClass}">
             ${icon}
             <span class="sr-only">Icon</span>
@@ -39,20 +42,13 @@ function showToast(message, type) {
         </button>
     `;
 
-    // Add close functionality
-    toast.querySelector('button').onclick = () => {
-        toast.remove();
-    };
-
-    // Append the toast to the container
-    toastContainer.appendChild(toast);
-
-    // Automatically remove the toast after 5 seconds
-    setTimeout(() => {
-        toast.remove();
-    }, 5000);
+	toast.querySelector("button").onclick = () => {
+		toast.remove();
+	};
+	toastContainer.appendChild(toast);
+	setTimeout(() => {
+		toast.remove();
+	}, 5000);
 }
 
-export {
-    showToast
-}
+export { showToast };
