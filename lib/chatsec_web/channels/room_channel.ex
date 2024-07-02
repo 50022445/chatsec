@@ -15,8 +15,7 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new_msg", %{"body" => body, "username" => username, "iv" => iv},
-        socket ) do
+  def handle_in("new_msg", %{"body" => body, "username" => username, "iv" => iv}, socket) do
     broadcast!(socket, "new_msg", %{
       "body" => body,
       "username" => username,
@@ -34,6 +33,7 @@ defmodule ChatsecWeb.RoomChannel do
   def handle_info({:after_join, username}, socket) do
     {:ok, _} =
       Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
+
     broadcast!(socket, "after_join", %{"username" => username})
     push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
