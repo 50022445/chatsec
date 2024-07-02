@@ -37,3 +37,8 @@ npm-debug.log
 
 # Elixir-lS
 .elixir_ls
+
+e2e/.pytest_cache
+e2e/.env
+e2e/tests/__pycache__
+e2e/tests/.env

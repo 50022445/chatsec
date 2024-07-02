@@ -9,7 +9,7 @@ import {
     showToast
 } from "./toast";
 
-async function redirectUserToChat() {
+function redirectUserToChat() {
     window.location = '/chat/create'
 }
 
@@ -33,53 +33,65 @@ function renderOnlineUsers(presence) {
     usernamesDiv.innerHTML = response;
 }
 
-function connectToChannel(username) {
-    if (username != null) {
-        const socket = new Socket("/socket", {
-            params: {
-                username: username
-            }
-        })
-
-        socket.connect()
-        const uuid = window.location.href.split("/").slice(-1)[0]
-        let channel = socket.channel(`room:${uuid}`, {
-            username: username
-        })
-
-        let presence = new Presence(channel)
-        presence.onSync(() => renderOnlineUsers(presence, channel))
-
-        channel.join()
-            .receive("ok", _ => {
-                console.log("Joined successfully:  ", username);
-            })
-            .receive("error", resp => {
-                console.log("Unable to join", resp);
-            });
-
-        showToast("Connected to channel.", "success")
-        return channel
-    } else {
-        usernameForm().then((username) => {
-            connectToChannel(username)
-            location.reload();
-            showToast("Connected to channel.", "success")
-        })
+function checkAndConnect(username, callback) {
+    username = username ?? sessionStorage.getItem('username');
+    if (!username) {
+        // Handle the case where username is not provided
+        usernameForm().then((resolvedUsername) => {
+            sessionStorage.setItem("username", resolvedUsername);
+            connectToChannel(resolvedUsername, callback);
+        }).catch((error) => {
+            showToast("Unable to get username.", "danger");
+        });
+        return;
     }
+    connectToChannel(username, callback);
 }
 
-function showDeleteChatModal() {
+function connectToChannel(username, callback) {
+    const socket = new Socket("/socket", {
+        params: {
+            username: username
+        }
+    });
+
+    socket.connect();
+
+    const uuid = window.location.href.split("/").slice(-1)[0];
+    const channel = socket.channel(`room:${uuid}`, {
+        username: username
+    });
+
+    let presence = new Presence(channel);
+    presence.onSync(() => renderOnlineUsers(presence, channel));
+
+    channel.join()
+        .receive("ok", () => {
+            showToast("Connected to channel.", "success");
+            // Invoke the callback with the channel
+            if (callback) {
+                callback(channel, username);
+            }
+        })
+        .receive("error", (resp) => {
+            showToast("Unable to join channel.", "danger");
+        });
+
+    return { channel, username };
+}
+
+
+function showDeleteChatModal(channel, username) {
     const modalHTML = `
     <div id="deleteChatModal" class="modal fixed inset-0 flex items-center justify-center z-50">
     <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
-      <h2 class="text-2xl font-bold text-white mb-4 text-center">Confirm deletion?</h2>
-      <div class="flex justify-center mt-4">
-            <button id="closeModalButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded mr-2">Cancel</button>
-            <button id="submitModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">Delete chat</button>
-        </div>
+        <h2 class="text-2xl font-bold text-white mb-4 text-center">Confirm deletion?</h2>
+        <div class="flex justify-center mt-4">
+            <button id="closeModalButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded mr-2 transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 shadow-md">Cancel</button>
+            <button id="submitModalButton" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-md">Delete chat</button>
         </div>
     </div>
+</div>
         `;
     // Create a div element and set its innerHTML to the modal HTML
     const modalContainer = document.createElement('div');
@@ -109,17 +121,25 @@ function showDeleteChatModal() {
     // Add event listener to handle form submission
     document.getElementById('submitModalButton').addEventListener('click', function () {
         closeModal();
-        deleteChat();
+        deleteChat(channel, username);
     });
 }
 
-function deleteChat() {
+function deleteChat(channel, username) {
+    try {
+        channel.push("adios", {
+            username: username 
+        })
+    } catch (e) {
+        showToast("Deleting room failed!", "danger");
+    }
+
     const uuid = window.location.href.split("/").slice(-1)[0]
     window.location = `/chat/delete/${uuid}`
 }
 
 export {
     redirectUserToChat,
-    connectToChannel,
-    showDeleteChatModal
+    showDeleteChatModal,
+    checkAndConnect
 }
