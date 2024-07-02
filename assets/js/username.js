@@ -69,8 +69,8 @@ function usernameForm() {
 }
 
 function createRandomUsername() {
-    const adjectives = ["utter", "level", "white", "misty", "rough", "inner", "faint", "windy", "plant", "elite", "sassy", "dirty", "large", "sable", "tight", "loose", "sweet", "awake", "obese", "swift"];
-    const verbs = ["shrug", "press", "visit", "dress", "drive", "value", "abuse", "slide", "taste", "shout", "chase", "house", "blame", "seize", "smash", "greet", "bloom", "breed", "boast", "range"];
+    const adjectives = ["agressive", "angry", "bored", "busy", "cautious", "disturbed", "dead", "cruel", "creepy", "elite", "fair", "envious", "good", "powerful", "rich", "strange", "sweet", "wicked", "pleasant", "talented"];
+    const verbs = ["aamon", "paimon", "baal", "baphomet", "lucifer", "mammon", "asmodeus", "leviathan", "beelzebub", "azazel", "belphegor", "legion", "oriax", "phenex", "raum", "vapula", "sitri", "naberus", "foraii", "gemory"];
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
