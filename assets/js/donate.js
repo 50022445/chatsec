@@ -1,6 +1,5 @@
 import { copyToClipboard } from "./link";
 
-
 function donateModal() {
     const modalHTML = `
     <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
