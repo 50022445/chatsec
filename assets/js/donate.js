@@ -5,11 +5,11 @@ function donateModal() {
     const modalHTML = `
     <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
       <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
-          <h2 class="text-2xl font-bold text-white mb-4">Donate?</h2>
+          <h2 class="text-2xl font-bold text-white mb-4">Buy me a coffee?</h2>
           <div class="mb-4">
               <input type="text" id="chatUrl" value="CRYPTO_ADDRESS_HERE"
                      class="w-full p-2 border focus:outline-none focus:ring-2
-                     focus:ring-green-500 focus:border-transparent bg-gray-800
+                     focus:ring-orange-600 focus:border-transparent bg-gray-800
                      text-white placeholder-gray-500 rounded-md" readonly>
           </div>
           <div class="flex justify-end">
