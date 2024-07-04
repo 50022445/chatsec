@@ -12,7 +12,7 @@ function copyChatUrl() {
 	const url = location.href;
 	const modalHTML = `
   <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-    <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
+    <div class="p-8 bg-gray-900 rounded-lg max-w-sm w-full">
         <h2 class="text-2xl font-bold text-white mb-4">Invite users</h2>
         <div class="mb-4">
             <input type="text" id="walletAddress" value="${url}"

@@ -77,7 +77,7 @@ function connectToChannel(username, callback) {
 function showDeleteChatModal(channel, username) {
 	const modalHTML = `
     <div id="deleteChatModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-    <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
+    <div class="p-8 bg-gray-900 rounded-lg max-w-sm w-full">
         <h2 class="text-2xl font-bold text-white mb-4 text-center">Confirm deletion?</h2>
         <div class="flex justify-center mt-4">
             <button id="closeModalButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded mr-2 transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 shadow-md">Cancel</button>
