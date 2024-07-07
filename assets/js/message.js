@@ -41,18 +41,18 @@ async function sendAndReceiveMessages(
 					payload.body,
 					payload.iv,
 				);
-				
+
 				usernameItem.className = "username";
 				usernameItem.innerText = payload.username;
 				messageItem.innerText = decryptedMessage;
 				// Use Tailwind CSS classes to control width and word break
 				messageItem.className = "max-w-full break-words";
-				
+
 				const divContainer = document.createElement("div");
 				divContainer.className = "flex flex-col gap-1";
 				divContainer.appendChild(usernameItem);
 				divContainer.appendChild(messageItem);
-				
+
 				if (payload.username === username) {
 					divContainer.classList.add("items-end");
 					usernameItem.style.color = "rgb(138,255,156)";
@@ -60,9 +60,8 @@ async function sendAndReceiveMessages(
 					divContainer.classList.add("items-start");
 					usernameItem.style.color = "rgb(255, 128, 197)";
 				}
-				
+
 				messagesContainer.appendChild(divContainer);
-				
 			} else {
 				showToast("Invalid payload!", "danger");
 			}
