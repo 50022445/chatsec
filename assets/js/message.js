@@ -75,4 +75,19 @@ async function sendAndReceiveMessages(
 	});
 }
 
-export { sendAndReceiveMessages };
+function simulateEnterKeyPress(element) {
+	// Create a new 'Enter' key event
+	const enterEvent = new KeyboardEvent("keypress", {
+		key: "Enter",
+		code: "Enter",
+		keyCode: 13,
+		which: 13,
+		bubbles: true,
+		cancelable: true,
+	});
+
+	// Dispatch the event on the element
+	element.dispatchEvent(enterEvent);
+}
+
+export { sendAndReceiveMessages, simulateEnterKeyPress };

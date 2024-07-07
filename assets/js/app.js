@@ -27,13 +27,13 @@ import {
 } from "./chat.js";
 import { copyChatUrl } from "./link.js";
 import { handshake } from "./handshake.js";
-import { sendAndReceiveMessages } from "./message.js";
+import { sendAndReceiveMessages, simulateEnterKeyPress } from "./message.js";
 import { donateModal } from "./donate.js";
 
 const csrfToken = document
 	.querySelector("meta[name='csrf-token']")
 	.getAttribute("content");
-  const liveSocket = new LiveSocket("/live", Socket, {
+const liveSocket = new LiveSocket("/live", Socket, {
 	longPollFallbackMs: 2500,
 	params: { _csrf_token: csrfToken },
 });
@@ -56,6 +56,7 @@ liveSocket.connect();
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.simulateEnterKeyPress = simulateEnterKeyPress;
 window.donateModal = donateModal;
 window.sendAndReceiveMessages = sendAndReceiveMessages;
 window.handshake = handshake;
