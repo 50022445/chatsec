@@ -84,10 +84,5 @@
     observer.observe(messages, {
       childList: true
     });
-  // Auto-grow the textarea
-  chatInput.addEventListener('keydown', function(event) {
-      this.style.height = 'auto';
-      this.style.height = (this.scrollHeight) + 'px';
-  });
 });
 </script>
