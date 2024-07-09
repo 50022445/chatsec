@@ -16,6 +16,8 @@ services:
       - traefik.enable=true
       - traefik.http.routers.chatsec.tls=true
       - traefik.http.routers.chatsec.tls.certresolver=myresolver
+    depends_on:
+      - reverse-proxy
   reverse-proxy:
     image: traefik:v2.11
     restart: unless-stopped
