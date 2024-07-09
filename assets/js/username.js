@@ -1,5 +1,15 @@
 import { showToast } from "./toast";
 
+function sanitizeInput(input) {
+    // Remove all HTML/XML tags
+    let sanitized = input.replace(/<\/?[^>]+(>|$)/g, "");
+    // Remove all non-alphanumeric characters (except spaces)
+    sanitized = sanitized.replace(/[^a-zA-Z0-9 ]/g, "");
+    // Remove extra spaces
+    sanitized = sanitized.replace(/\s+/g, ' ').trim();
+    return sanitized;
+}
+
 function usernameForm() {
 	return new Promise((resolve, reject) => {
 		const modalHTML = `
@@ -48,7 +58,8 @@ function usernameForm() {
 			});
 
 		function submitUsername() {
-			const username = document.getElementById("usernameInput").value;
+			const input = document.getElementById("usernameInput").value;
+			const username = sanitizeInput(input);
 			if (username) {
 				sessionStorage.setItem("username", username);
 				closeModal();
@@ -132,4 +143,4 @@ function createRandomUsername() {
 	return randomUsername;
 }
 
-export { usernameForm };
+export { usernameForm, sanitizeInput };
