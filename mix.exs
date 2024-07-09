@@ -68,6 +68,7 @@ defmodule Chatsec.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
+      create_env: ["cmd 'echo SECRET_KEY_BASE=$(mix phx.gen.secret) > .env'"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind chatsec", "esbuild chatsec"],
       "assets.deploy": [
