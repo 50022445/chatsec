@@ -6,13 +6,11 @@ services:
       context: .
     env_file:
       - .env
-    ports: 
-      - "4000:4000"
     environment: 
       PHX_SERVER: yes
       PHX_HOST: "chatsec.0x63686174.com"
     labels:
-      - traefik.http.services.chatsec.loadbalancer.server.port=4001
+      - traefik.http.services.chatsec.loadbalancer.server.port=4000
       - traefik.enable=true
       - traefik.http.routers.chatsec.tls=true
       - traefik.http.routers.chatsec.tls.certresolver=myresolver
