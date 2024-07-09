@@ -1,7 +1,7 @@
 import { Socket, Presence } from "phoenix";
 import { usernameForm } from "./username";
 import { showToast } from "./toast";
-import { sanitizeInput } from "./username"
+import { sanitizeInput } from "./username";
 
 function redirectUserToChat() {
 	window.location = "/chat/create";
@@ -27,7 +27,7 @@ function renderOnlineUsers(presence) {
 	li.classList.add("flex");
 	li.classList.add("items-center");
 	li.innerHTML = svgIcon;
-	li.appendChild(document.createTextNode(response))
+	li.appendChild(document.createTextNode(response));
 	usernamesDiv.appendChild(li);
 	// usernamesDiv.innerHTML = `<li id="username" class="flex items-center">${svgIcon}</li>`;
 }

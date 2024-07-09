@@ -1,13 +1,10 @@
 import { showToast } from "./toast";
 
 function sanitizeInput(input) {
-    // Remove all HTML/XML tags
-    let sanitized = input.replace(/<\/?[^>]+(>|$)/g, "");
-    // Remove all non-alphanumeric characters (except spaces)
-    sanitized = sanitized.replace(/[^a-zA-Z0-9 ]/g, "");
-    // Remove extra spaces
-    sanitized = sanitized.replace(/\s+/g, ' ').trim();
-    return sanitized;
+	let sanitized = input.replace(/<\/?[^>]+(>|$)/g, "");
+	sanitized = sanitized.replace(/[^a-zA-Z0-9 ]/g, "");
+	sanitized = sanitized.replace(/\s+/g, " ").trim();
+	return sanitized;
 }
 
 function usernameForm() {
