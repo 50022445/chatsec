@@ -127,7 +127,7 @@ async function importPublicKey(base64) {
 			namedCurve: "P-384",
 		},
 		true,
-		["deriveKey"],
+		[],
 	);
 	return key;
 }
