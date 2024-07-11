@@ -11,6 +11,7 @@ async function sendAndReceiveMessages(
 	const secretKey = await handshake(channel, username);
 	chatInput.addEventListener("keypress", async (event) => {
 		if (!event.shiftKey && event.key === "Enter") {
+			event.preventDefault();
 			const msg = chatInput.value.trim();
 			if (msg.length < 1) {
 				return;
@@ -23,7 +24,7 @@ async function sendAndReceiveMessages(
 					iv: iv,
 				});
 				chatInput.value = "";
-				event.preventDefault();
+				chatInput.style.height = '40px';
 			} catch (error) {
 				showToast("Sending message failed!", "danger");
 			}
@@ -76,7 +77,6 @@ async function sendAndReceiveMessages(
 }
 
 function simulateEnterKeyPress(element) {
-	// Create a new 'Enter' key event
 	const enterEvent = new KeyboardEvent("keypress", {
 		key: "Enter",
 		code: "Enter",
@@ -85,8 +85,6 @@ function simulateEnterKeyPress(element) {
 		bubbles: true,
 		cancelable: true,
 	});
-
-	// Dispatch the event on the element
 	element.dispatchEvent(enterEvent);
 }
 

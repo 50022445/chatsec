@@ -9,7 +9,6 @@ function redirectUserToChat() {
 
 function renderOnlineUsers(presence) {
 	const userList = [];
-	let response;
 	const svgIcon = `
       <svg class="w-6 h-6 text-emerald-500 inline-block mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
@@ -19,17 +18,19 @@ function renderOnlineUsers(presence) {
 	presence.list((id, { metas: [first, ...rest] }) => {
 		const username = sanitizeInput(id);
 		userList.push(username);
-		response = username;
 	});
 
 	const usernamesDiv = document.getElementById("usernames");
-	const li = document.createElement("li");
-	li.classList.add("flex");
-	li.classList.add("items-center");
-	li.innerHTML = svgIcon;
-	li.appendChild(document.createTextNode(response));
-	usernamesDiv.appendChild(li);
-	// usernamesDiv.innerHTML = `<li id="username" class="flex items-center">${svgIcon}</li>`;
+	usernamesDiv.innerHTML = "";
+	for (let i = 0; i < userList.length; i++) {
+		const username = userList[i];
+		const li = document.createElement("li");
+		li.classList.add("flex");
+		li.classList.add("items-center");
+		li.innerHTML = svgIcon;
+		li.appendChild(document.createTextNode(username));
+		usernamesDiv.appendChild(li);
+	}
 }
 
 function checkAndConnect(value, callback) {

@@ -37,8 +37,8 @@
       <div class="flex items-center w-full bg-gray-800 rounded-lg">
    <textarea
         id="chat-input"
-        class="rounded-lg focus:ring-2 focus:ring-emerald-500 bg-gray-800 text-white placeholder-gray-500 flex-grow p-2 placeholder-gray-500 border-none focus:border-none"
-        style="max-height: 200px; height: 40px;"
+        class="rounded-lg textarea-resize focus:ring-2 focus:ring-emerald-500 bg-gray-800 text-white placeholder-gray-500 flex-grow p-2 placeholder-gray-500 border-none focus:border-none"
+        style="max-height:200px; min-height:40px; resize:none;"
         placeholder="Write a message..."
         rows="1"
         oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
@@ -68,11 +68,17 @@
         showDeleteChatModal(channel, username);
       });
 
-          // Add event listener to the send button
       document.getElementById('sendButton').addEventListener('click', function () {
           simulateEnterKeyPress(chatInput);
       });
     });
+
+    function adjustTextareaHeight() {
+      chatInput.style.height = 'auto'; // Reset height
+      chatInput.style.height = `${chatInput.scrollHeight}px`; // Set new height
+    }
+    chatInput.addEventListener('input', adjustTextAreaHeight);
+    
     const messages = document.getElementById('messages');
     function autoScroll() {
       messages.scrollTop = messages.scrollHeight;
