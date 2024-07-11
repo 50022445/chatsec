@@ -14,6 +14,9 @@ services:
       - traefik.enable=true
       - traefik.http.routers.chatsec.tls=true
       - traefik.http.routers.chatsec.tls.certresolver=myresolver
+      # Rate limit for 6 requests per minute
+      - "traefik.http.middlewares.test-ratelimit.ratelimit.average=6"
+      - "traefik.http.middlewares.test-ratelimit.ratelimit.period=1m"
     depends_on:
       - reverse-proxy
   reverse-proxy:
@@ -48,6 +51,3 @@ services:
           create_host_path: false
     labels:
       - "traefik.http.routers.chatsec.rule=Host(`chatsec.docker.localhost`)"
-      # Rate limit for 6 requests per minute
-      - "traefik.http.middlewares.test-ratelimit.ratelimit.average=6"
-      - "traefik.http.middlewares.test-ratelimit.ratelimit.period=1m"
