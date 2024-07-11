@@ -48,9 +48,4 @@ services:
           create_host_path: false
     labels:
       - "traefik.http.routers.chatsec.rule=Host(`chatsec.docker.localhost`)"
-    http:
-      middlewares:
-        test-ratelimit:
-          rateLimit:
-            period: "1m"
-            average: 6
+      - "traefik.http.middlewares.test-ratelimit.ratelimit.average=3"
