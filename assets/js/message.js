@@ -24,7 +24,7 @@ async function sendAndReceiveMessages(
 					iv: iv,
 				});
 				chatInput.value = "";
-				chatInput.style.height = '40px';
+				chatInput.style.height = "40px";
 			} catch (error) {
 				showToast("Sending message failed!", "danger");
 			}

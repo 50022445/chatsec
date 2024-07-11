@@ -74,11 +74,11 @@
     });
 
     function adjustTextareaHeight() {
-      chatInput.style.height = 'auto'; // Reset height
-      chatInput.style.height = `${chatInput.scrollHeight}px`; // Set new height
+      chatInput.style.height = 'auto';
+      chatInput.style.height = `${chatInput.scrollHeight}px`;
     }
     chatInput.addEventListener('input', adjustTextAreaHeight);
-    
+
     const messages = document.getElementById('messages');
     function autoScroll() {
       messages.scrollTop = messages.scrollHeight;
