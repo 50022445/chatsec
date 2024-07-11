@@ -1,15 +1,5 @@
 import Config
 
-# Configure your database
-config :chatsec, Chatsec.Repo,
-  username: "root",
-  password: "",
-  hostname: "localhost",
-  database: "chatsec_dev",
-  stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

@@ -28,9 +28,9 @@ defmodule ChatsecWeb.ChannelState do
 
   def leave(pid \\ __MODULE__, room_id, identifier) do
     if GenServer.call(pid, {:list_users, room_id}) == [identifier] do
-        GenServer.call(pid, {:delete, room_id})
+      GenServer.call(pid, {:delete, room_id})
     else
-        GenServer.call(pid, {:leave, room_id, identifier})
+      GenServer.call(pid, {:leave, room_id, identifier})
     end
   end
 

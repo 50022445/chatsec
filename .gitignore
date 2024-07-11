@@ -38,7 +38,11 @@ npm-debug.log
 # Elixir-lS
 .elixir_ls
 
+# End to end test folder
 e2e/.pytest_cache
 e2e/.env
 e2e/tests/__pycache__
 e2e/tests/.env
+
+# env file for docker
+.env

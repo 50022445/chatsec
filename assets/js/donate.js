@@ -1,12 +1,13 @@
 import { copyToClipboard } from "./link";
 
 function donateModal() {
-    const modalHTML = `
+	const url = "49ibYHn3jesXrgykLqRc1o5vgUC5gizRuRpYvBYy1TKYPjAfPNgHQ91iTafViAFYMbb7AitUcmiiEcRVqywxT1BoBcUtC2C";
+	const modalHTML = `
     <div id="copyUrlModal" class="modal fixed inset-0 flex items-center justify-center z-50">
-      <div class="p-8 bg-gray-900 rounded-lg shadow-lg max-w-sm w-full">
-          <h2 class="text-2xl font-bold text-white mb-4">Buy me a coffee?</h2>
+      <div class="p-8 bg-gray-900 rounded-lg max-w-sm w-full">
+          <h2 class="text-2xl font-bold text-white mb-4">Donate? &#x1F920;</h2>
           <div class="mb-4">
-              <input type="text" id="chatUrl" value="CRYPTO_ADDRESS_HERE"
+              <input type="text" id="chatUrl" value="${url}"
                      class="w-full p-2 border focus:outline-none focus:ring-2
                      focus:ring-orange-600 focus:border-transparent bg-gray-800
                      text-white placeholder-gray-500 rounded-md" readonly>
@@ -18,39 +19,37 @@ function donateModal() {
       </div>
   </div>
     `;
-    // Create a div element and set its innerHTML to the modal HTML
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-  
-    const portal = document.getElementById('portal');
-    const root = document.getElementById('root');
-  
-    portal.appendChild(modalContainer);
-    // Add blur class to the body
-    root.classList.add('blur-2xl')
-    // Show the modal
-    document.getElementById('copyUrlModal').style.display = 'flex';
-  
-    // Function to close the modal and remove it from the DOM
-    function closeModal() {
-      document.getElementById('copyUrlModal').style.display = 'none';
-      portal.removeChild(modalContainer);
-      root.classList.remove('blur-2xl');
-    }
-  
-    // Add event listener to close the modal
-    document.getElementById('closeModalButton').addEventListener('click', function () {
-      closeModal();
-    });
-  
-    // Add event listener to handle form submission
-    document.getElementById('submitModalButton').addEventListener('click', function () {
-      const address = document.getElementById('chatUrl').value;
-      copyToClipboard(address)
-      closeModal();
-    });
-  }
+	// Create a div element and set its innerHTML to the modal HTML
+	const modalContainer = document.createElement("div");
+	modalContainer.innerHTML = modalHTML;
 
-export { 
-    donateModal
+	const portal = document.getElementById("portal");
+	const root = document.getElementById("root");
+
+	portal.appendChild(modalContainer);
+	// Add blur class to the body
+	root.classList.add("blur-2xl");
+	// Show the modal
+	document.getElementById("copyUrlModal").style.display = "flex";
+
+	// Function to close the modal and remove it from the DOM
+	function closeModal() {
+		document.getElementById("copyUrlModal").style.display = "none";
+		portal.removeChild(modalContainer);
+		root.classList.remove("blur-2xl");
+	}
+
+	// Add event listener to close the modal
+	document.getElementById("closeModalButton").addEventListener("click", () => {
+		closeModal();
+	});
+
+	// Add event listener to handle form submission
+	document.getElementById("submitModalButton").addEventListener("click", () => {
+		const address = document.getElementById("chatUrl").value;
+		copyToClipboard(address);
+		closeModal();
+	});
 }
+
+export { donateModal };

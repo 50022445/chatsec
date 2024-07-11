@@ -18,6 +18,7 @@ defmodule ChatsecWeb.PageController do
     if chatid in ChannelState.get_rooms() do
       ChannelState.delete_room(chatid)
     end
+
     redirect(conn, to: ~p"/")
   end
 

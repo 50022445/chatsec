@@ -1,61 +1,84 @@
-<div class="container grid grid-rows-3 bg-gray-900 min-w-full text-white">
+<div class="container bg-gray-900 min-w-full text-white">
   <section class="section flex-grow row-span-2 p-4">
     <h1 class="title text-2xl font-bold mb-4">Messages.</h1>
     <div
       id="messages"
       role="log"
       aria-live="polite"
-      class="border p-4 border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-80 md:h-[32rem] flex flex-col gap-2"
+      class="border p-4 border-gray-700 rounded-lg overflow-y-auto bg-gray-800 shadow h-[calc(45vh)] sm:h-[calc(60vh)] md:h-[calc(70vh)] flex flex-col gap-2"
     >
     </div>
 
-<div class="mt-3 flex flex-col md:flex-row justify-between items-start md:items-center">
-    <div id="users" class="mb-4 md:mb-0">
-        <h2 class="text-2xl font-bold mb-2">Online.</h2>
-        <ul id="usernames" class="flex flex-wrap space-x-2 text-white"></ul>
-    </div>
+    <div class="mt-3 flex flex-col md:flex-row justify-between items-start md:items-center space-y-2 md:space-y-0">
+      <div id="users" class="mb-4 md:mb-0">
+        <h2 class="text-xl md:text-2xl font-bold mb-2">Online.</h2>
+        <ul id="usernames" class="flex flex-wrap space-x-2 text-white text-sm md:text-base"></ul>
+      </div>
 
-    <div class="flex justify-end space-x-2" id="CTA">
+      <div class="flex justify-end space-x-2">
         <button
-            onclick="copyChatUrl()"
-            class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 shadow-md"
+          onclick="copyChatUrl()"
+          class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-3 md:px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 shadow-md text-sm md:text-base"
         >
-            Invite user
+          Invite user
         </button>
         <button
-            id="showDeleteChatModal"
-            class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-md"
+          id="showDeleteChatModal"
+          class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-3 md:px-4 rounded transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-md text-sm md:text-base"
         >
-            Delete room
+          Delete room
         </button>
+      </div>
     </div>
-</div>
-</section>
+  </section>
 
-<section class="section is-small fixed bottom-0 w-full bg-gray-900 p-4 row-span-1">
-    <div>
-        <textarea
-            id="chat-input"
-            class="textarea w-full border border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-500"
-            placeholder="Write a message.."
-        ></textarea>
-        <p class="text-sm text-gray-500 mt-2">Press `Enter` to send message.</p>
-    </div>
-</section>
-</div>
-
+  <section class="section is-small fixed bottom-0 w-full bg-gray-900 p-4 row-span-1">
+    <div class="flex items-center">
+      <div class="flex items-center w-full bg-gray-800 rounded-lg">
+   <textarea
+        id="chat-input"
+        class="rounded-lg textarea-resize focus:ring-2 focus:ring-emerald-500 bg-gray-800 text-white placeholder-gray-500 flex-grow p-2 placeholder-gray-500 border-none focus:border-none"
+        style="max-height:200px; min-height:40px; resize:none;"
+        placeholder="Write a message..."
+        rows="1"
+        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+    ></textarea>
+        <button
+          id="sendButton"
+          class="font-bold rounded-full p-3 transition duration-200 ease-in-out transform hover:scale-150"
+          type="submit"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 fill-emerald-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
 
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", () => {
-    let chatInput = document.querySelector("#chat-input");
+    let chatInput = document.getElementById("chat-input");
     let messagesContainer = document.querySelector("#messages");
     checkAndConnect(null, (channel, username) => {
       sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
 
       document.getElementById('showDeleteChatModal').addEventListener('click', function () {
         showDeleteChatModal(channel, username);
-        });
       });
+
+      document.getElementById('sendButton').addEventListener('click', function () {
+          simulateEnterKeyPress(chatInput);
+      });
+    });
+
+    function adjustTextareaHeight() {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = `${chatInput.scrollHeight}px`;
+    }
+    chatInput.addEventListener('input', adjustTextAreaHeight);
+
     const messages = document.getElementById('messages');
     function autoScroll() {
       messages.scrollTop = messages.scrollHeight;
@@ -63,8 +86,9 @@
     const observer = new MutationObserver(() => {
       autoScroll();
     });
+    
     observer.observe(messages, {
       childList: true
     });
-  });
+});
 </script>
