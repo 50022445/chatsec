@@ -137,6 +137,7 @@ function deleteChat(channel, username) {
 	}
 
 	const uuid = window.location.href.split("/").slice(-1)[0];
+	sessionStorage.clear();
 	window.location = `/chat/delete/${uuid}`;
 }
 

@@ -8,7 +8,7 @@ async function sendAndReceiveMessages(
 	channel,
 	messagesContainer,
 ) {
-	const secretKey = await handshake(channel, username);
+	const secretKey = await handshake(null, channel, username);
 	chatInput.addEventListener("keypress", async (event) => {
 		if (!event.shiftKey && event.key === "Enter") {
 			event.preventDefault();
@@ -71,7 +71,8 @@ async function sendAndReceiveMessages(
 		}
 	});
 
-	channel.on("room_deleted", (payload) => {
+	channel.on("room_deleted", () => {
+		sessionStorage.clear();
 		window.location = "/";
 	});
 }
