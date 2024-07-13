@@ -48,7 +48,7 @@ function showToast(message, type) {
 	toastContainer.appendChild(toast);
 	setTimeout(() => {
 		toast.remove();
-	}, 5000);
+	}, 2000);
 }
 
 export { showToast };
