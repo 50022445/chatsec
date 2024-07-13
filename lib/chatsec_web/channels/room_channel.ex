@@ -31,18 +31,21 @@ defmodule ChatsecWeb.RoomChannel do
   end
 
   def handle_info({:after_join, username}, socket) do
-    {:ok, _} =
-      Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
-
+    track_user_presence(socket, username)
     broadcast!(socket, "after_join", %{"username" => username})
-    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 
-  def terminate(_, socket) do
+  def terminate(username, socket) do
     case socket.assigns do
       %{user_id: username, room_id: room_id} -> ChatsecWeb.ChannelState.leave(room_id, username)
       _ -> :ok
     end
+    Presence.untrack(socket, username)
+  end
+
+  defp track_user_presence(socket, username) do
+    Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
+    push(socket, "presence_state", Presence.list(socket))
   end
 end
