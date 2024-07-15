@@ -51,36 +51,45 @@ function checkAndConnect(value, callback) {
 }
 
 function connectToChannel(username, callback) {
-	const socket = new Socket("/socket", {
-		params: {
-			username: username,
-		},
-	});
+    // Ensure the socket and channel are not re-created multiple times
+    if (window.socket && window.channel) {
+        if (callback) {
+            callback(window.channel, username);
+        }
+        return;
+    }
 
-	socket.connect();
+    const socket = new Socket("/socket", {
+        params: {
+            username: username,
+        },
+    });
 
-	const uuid = window.location.href.split("/").slice(-1)[0];
-	const channel = socket.channel(`room:${uuid}`, {
-		username: username,
-	});
+    socket.connect();
 
-	const presence = new Presence(channel);
-	presence.onSync(() => renderOnlineUsers(presence, channel));
+    const uuid = window.location.href.split("/").slice(-1)[0];
+    const channel = socket.channel(`room:${uuid}`, {
+        username: username,
+    });
 
-	channel
-		.join()
-		.receive("ok", () => {
-			showToast("Connected to channel.", "success");
-			// Invoke the callback with the channel
-			if (callback) {
-				callback(channel, username);
-			}
-		})
-		.receive("error", (resp) => {
-			showToast("Unable to join channel.", "danger");
-		});
+    const presence = new Presence(channel);
+    presence.onSync(() => renderOnlineUsers(presence, channel));
 
-	return { channel, username };
+    channel
+        .join()
+        .receive("ok", () => {
+            showToast("Connected to channel.", "success");
+            window.socket = socket;
+            window.channel = channel;
+            if (callback) {
+                callback(channel, username);
+            }
+        })
+        .receive("error", (resp) => {
+            showToast("Unable to join channel.", "danger");
+        });
+
+    return { channel, username };
 }
 
 function showDeleteChatModal(channel, username) {
