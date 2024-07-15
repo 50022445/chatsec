@@ -24,6 +24,7 @@ import {
 	redirectUserToChat,
 	checkAndConnect,
 	showDeleteChatModal,
+	removeAllEventListeners
 } from "./chat.js";
 import { copyChatUrl } from "./link.js";
 import { handshake } from "./handshake.js";
@@ -56,6 +57,7 @@ liveSocket.connect();
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
+window.removeAllEventListeners = removeAllEventListeners;
 window.simulateEnterKeyPress = simulateEnterKeyPress;
 window.donateModal = donateModal;
 window.sendAndReceiveMessages = sendAndReceiveMessages;

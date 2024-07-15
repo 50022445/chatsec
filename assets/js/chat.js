@@ -51,45 +51,38 @@ function checkAndConnect(value, callback) {
 }
 
 function connectToChannel(username, callback) {
-    // Ensure the socket and channel are not re-created multiple times
-    if (window.socket && window.channel) {
-        if (callback) {
-            callback(window.channel, username);
-        }
-        return;
-    }
+	const socket = new Socket("/socket", {
+		params: {
+			username: username,
+		},
+	});
 
-    const socket = new Socket("/socket", {
-        params: {
-            username: username,
-        },
-    });
+	console.log(socket);
 
-    socket.connect();
+	socket.connect();
 
-    const uuid = window.location.href.split("/").slice(-1)[0];
-    const channel = socket.channel(`room:${uuid}`, {
-        username: username,
-    });
+	const uuid = window.location.href.split("/").slice(-1)[0];
+	const channel = socket.channel(`room:${uuid}`, {
+		username: username,
+	});
 
-    const presence = new Presence(channel);
-    presence.onSync(() => renderOnlineUsers(presence, channel));
+	const presence = new Presence(channel);
+	presence.onSync(() => renderOnlineUsers(presence, channel));
 
-    channel
-        .join()
-        .receive("ok", () => {
-            showToast("Connected to channel.", "success");
-            window.socket = socket;
-            window.channel = channel;
-            if (callback) {
-                callback(channel, username);
-            }
-        })
-        .receive("error", (resp) => {
-            showToast("Unable to join channel.", "danger");
-        });
+	channel
+		.join()
+		.receive("ok", () => {
+			showToast("Connected to channel.", "success");
+			// Invoke the callback with the channel
+			if (callback) {
+				callback(channel, username);
+			}
+		})
+		.receive("error", (resp) => {
+			showToast("Unable to join channel.", "danger");
+		});
 
-    return { channel, username };
+	return { channel, username };
 }
 
 function showDeleteChatModal(channel, username) {
@@ -150,4 +143,14 @@ function deleteChat(channel, username) {
 	window.location = `/chat/delete/${uuid}`;
 }
 
-export { redirectUserToChat, showDeleteChatModal, checkAndConnect };
+function removeAllEventListeners(element) {
+    if (!element || !(element instanceof Element)) {
+        console.error("Invalid element provided");
+        return;
+    }
+    const clonedElement = element.cloneNode(true);
+    element.parentNode.replaceChild(clonedElement, element);
+    return clonedElement;
+}
+
+export { redirectUserToChat, showDeleteChatModal, checkAndConnect, removeAllEventListeners };

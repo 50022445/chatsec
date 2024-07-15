@@ -77,13 +77,10 @@ async function handshake(value, channel, username) {
 
 		showToast("Handshake completed!", "success");
 
-		// Convert secretKey to a base64 string
 		const secretKeyBase64 = await convertKeyToBase64(secretKey);
 		sessionStorage.setItem("shared", secretKeyBase64);
-		console.log(secretKey);
 		return secretKey;
 	}
-	console.log(convertBase64ToKey(secretKey));
 	return convertBase64ToKey(secretKey);
 }
 
