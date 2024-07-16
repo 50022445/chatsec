@@ -61,30 +61,26 @@
   document.addEventListener("DOMContentLoaded", () => {
     const chatInput = document.getElementById("chat-input");
     const messagesContainer = document.getElementById("messages");
-    const sendButton = document.getElementById("sendButton");
-    const deleteChat = document.getElementById("showDeleteChatModal");
     function autoScroll() {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
     function adjustTextareaHeight() {
       chatInput.style.height = 'auto';
       chatInput.style.height = `${chatInput.scrollHeight}px`;
-      console.log("hello")
     };
 
-    const newInput = removeAllEventListeners(chatInput);
     checkAndConnect(null, (channel, username) => {
-      sendAndReceiveMessages(newInput, username, channel, messagesContainer);
+      sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
 
-      deleteChat.addEventListener('click', () => {
+      document.getElementById('showDeleteChatModal').addEventListener('click', () => {
         showDeleteChatModal(channel, username);
       });
 
-      sendButton.addEventListener('click', () => {
-          simulateEnterKeyPress(newInput);
+      document.getElementById('sendButton').addEventListener('click', () => {
+          simulateEnterKeyPress(chatInput);
       });
 
-      newInput.addEventListener('input', adjustTextareaHeight);
+      chatInput.addEventListener('input', adjustTextareaHeight);
     });
     const observer = new MutationObserver(() => {
       autoScroll();

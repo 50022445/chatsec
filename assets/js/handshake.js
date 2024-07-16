@@ -43,7 +43,8 @@ function syn(exportedPublicKey, username, channel) {
 }
 
 async function handshake(value, channel, username) {
-	let secretKey = value ?? sessionStorage.getItem("shared");
+	const uuid = window.location.href.split("/").slice(-1)[0];
+	let secretKey = value ?? sessionStorage.getItem(uuid);
 	if (!secretKey) {
 		let acknowledged = false;
 		const pubkeyMap = new Map();
@@ -78,7 +79,7 @@ async function handshake(value, channel, username) {
 		showToast("Handshake completed!", "success");
 
 		const secretKeyBase64 = await convertKeyToBase64(secretKey);
-		sessionStorage.setItem("shared", secretKeyBase64);
+		sessionStorage.setItem(uuid, secretKeyBase64);
 		return secretKey;
 	}
 	return convertBase64ToKey(secretKey);

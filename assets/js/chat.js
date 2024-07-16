@@ -94,32 +94,21 @@ function showDeleteChatModal(channel, username) {
     </div>
 </div>
         `;
-	// Create a div element and set its innerHTML to the modal HTML
 	const modalContainer = document.createElement("div");
 	modalContainer.innerHTML = modalHTML;
-
 	const portal = document.getElementById("portal");
 	const root = document.getElementById("root");
-
 	portal.appendChild(modalContainer);
-	// Add blur class to the body
 	root.classList.add("blur-2xl");
-	// Show the modal
 	document.getElementById("deleteChatModal").style.display = "flex";
-
-	// Function to close the modal and remove it from the DOM
 	function closeModal() {
 		document.getElementById("deleteChatModal").style.display = "none";
 		portal.removeChild(modalContainer);
 		root.classList.remove("blur-2xl");
 	}
-
-	// Add event listener to close the modal
 	document.getElementById("closeModalButton").addEventListener("click", () => {
 		closeModal();
 	});
-
-	// Add event listener to handle form submission
 	document.getElementById("submitModalButton").addEventListener("click", () => {
 		closeModal();
 		deleteChat(channel, username);
