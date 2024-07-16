@@ -1,5 +1,4 @@
 function showToast(message, type) {
-	// Create the toast container if it doesn't exist
 	let toastContainer = document.getElementById("toast-container");
 	if (!toastContainer) {
 		toastContainer = document.createElement("div");
@@ -23,8 +22,6 @@ function showToast(message, type) {
 		iconBgClass =
 			"bg-pink-100 dark:bg-pink-800 text-pink-500 dark:text-pink-200";
 	}
-
-	// Create the toast element
 	const toast = document.createElement("div");
 	toast.className =
 		"flex items-center w-full max-w-xs p-4 mb-4 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 text-white";

@@ -30,8 +30,6 @@ async function sendAndReceiveMessages(
 			}
 		}
 	});
-
-	// retrieve the messages
 	channel.on("new_msg", async (payload) => {
 		try {
 			if (payload.body) {
@@ -46,7 +44,6 @@ async function sendAndReceiveMessages(
 				usernameItem.className = "username";
 				usernameItem.innerText = payload.username;
 				messageItem.innerText = decryptedMessage;
-				// Use Tailwind CSS classes to control width and word break
 				messageItem.className = "max-w-full break-words";
 
 				const divContainer = document.createElement("div");

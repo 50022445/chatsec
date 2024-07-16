@@ -42,7 +42,6 @@ function getMessageEncoding(message) {
 	return encoder.encode(message);
 }
 
-// Encode an array buffer to Base64
 function encodeBase64(arrayBuffer) {
 	let binary = "";
 	const bytes = new Uint8Array(arrayBuffer);
@@ -53,7 +52,6 @@ function encodeBase64(arrayBuffer) {
 	return btoa(binary);
 }
 
-// Decode a base64 string back into it's original state
 function decodeBase64(base64) {
 	const binary = atob(base64);
 	const len = binary.length;
@@ -105,7 +103,6 @@ async function decryptMessage(secretKey, encryptedMessage, ivBase64) {
 	}
 }
 
-// Export a key (public or private) to a base64 encoded string
 async function exportPublicKey(key) {
 	const exported = await crypto.subtle.exportKey("spki", key);
 	const exportedAsString = String.fromCharCode(...new Uint8Array(exported));

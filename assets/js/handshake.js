@@ -85,7 +85,7 @@ async function handshake(value, channel, username) {
 }
 
 async function convertKeyToBase64(key) {
-	const exportedKey = await crypto.subtle.exportKey('raw', key);
+	const exportedKey = await crypto.subtle.exportKey("raw", key);
 	const base64Key = btoa(String.fromCharCode(...new Uint8Array(exportedKey)));
 	return base64Key;
 }
@@ -98,17 +98,15 @@ async function convertBase64ToKey(base64Key) {
 		bytes[i] = binaryString.charCodeAt(i);
 	}
 	const key = await crypto.subtle.importKey(
-		'raw',
+		"raw",
 		bytes.buffer,
 		{
-			name: 'AES-GCM',
+			name: "AES-GCM",
 		},
 		true,
-		['encrypt', 'decrypt']
+		["encrypt", "decrypt"],
 	);
 	return key;
 }
 
-
 export { handshake };
-

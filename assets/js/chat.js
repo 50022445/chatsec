@@ -57,8 +57,6 @@ function connectToChannel(username, callback) {
 		},
 	});
 
-	console.log(socket);
-
 	socket.connect();
 
 	const uuid = window.location.href.split("/").slice(-1)[0];
@@ -81,7 +79,6 @@ function connectToChannel(username, callback) {
 		.receive("error", (resp) => {
 			showToast("Unable to join channel.", "danger");
 		});
-
 	return { channel, username };
 }
 
@@ -143,14 +140,4 @@ function deleteChat(channel, username) {
 	window.location = `/chat/delete/${uuid}`;
 }
 
-function removeAllEventListeners(element) {
-    if (!element || !(element instanceof Element)) {
-        console.error("Invalid element provided");
-        return;
-    }
-    const clonedElement = element.cloneNode(true);
-    element.parentNode.replaceChild(clonedElement, element);
-    return clonedElement;
-}
-
-export { redirectUserToChat, showDeleteChatModal, checkAndConnect, removeAllEventListeners };
+export { redirectUserToChat, showDeleteChatModal, checkAndConnect };
