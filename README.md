@@ -25,18 +25,18 @@ You will need to install `docker-compose` and clone this repository.
 
 #### 1. Generating a key
 
-After the repository is cloned you need to create a .env file containing a `SECRET_KEY_BASE` variable. This key can be generated using `mix phx.gen.secret`.
+After the repository is cloned you need to create a .env file containing a `SECRET_KEY_BASE` variable. This key can be generated using `pwgen`.
 
-**! to use this command, keep in mind that you have to have Elixir and Hex installed on your system.**
+**! to use this command, keep in mind that you have to have pwgen installed on your system.**
 
 ``` sh
   cd chatsec
-  echo "SECRET_KEY_BASE=$(mix phx.gen.secret)" > .env 
+  echo "SECRET_KEY_BASE=$(pwgen -y 64 1)" > .env 
   ```
 
 #### 2. Building and running the compose.yaml
 
-After the .env file is created containing our `SECRET_KEY_BASE` variable, we can start building the `compose.yaml` file.
+After the .env file is created containing our `SECRET_KEY_BASE` variable, we can start building the `docker images`.
 (Make sure you are inside the chatsec folder).
 
  ``` sh

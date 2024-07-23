@@ -61,6 +61,7 @@ function connectToChannel(username, callback) {
 	const channel = socket.channel(`room:${uuid}`, {
 		username: username,
 	});
+	window.channel = channel;
 	const presence = new Presence(channel);
 	presence.onSync(() => renderOnlineUsers(presence, channel));
 	channel
@@ -106,8 +107,8 @@ function showDeleteChatModal(channel, username) {
 		closeModal();
 	});
 	document.getElementById("submitModalButton").addEventListener("click", () => {
-		closeModal();
 		deleteChat(channel, username);
+		closeModal();
 	});
 }
 
@@ -119,10 +120,8 @@ function deleteChat(channel, username) {
 	} catch (e) {
 		showToast("Deleting room failed!", "danger");
 	}
-
-	const uuid = window.location.href.split("/").slice(-1)[0];
 	sessionStorage.clear();
-	window.location = `/chat/delete/${uuid}`;
+	window.location = "/";
 }
 
 export { redirectUserToChat, showDeleteChatModal, checkAndConnect };
