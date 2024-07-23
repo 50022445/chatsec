@@ -18,6 +18,10 @@ defmodule ChatsecWeb.ChannelState do
     GenServer.call(pid, {:delete, room_id})
   end
 
+  def delete_all_empty_rooms(pid \\ __MODULE__) do
+    GenServer.call(pid, {:delete_empty})
+  end
+
   def list_users(pid \\ __MODULE__, room_id) do
     GenServer.call(pid, {:list_users, room_id})
   end
@@ -27,11 +31,7 @@ defmodule ChatsecWeb.ChannelState do
   end
 
   def leave(pid \\ __MODULE__, room_id, identifier) do
-    if GenServer.call(pid, {:list_users, room_id}) == [identifier] do
-      GenServer.call(pid, {:delete, room_id})
-    else
-      GenServer.call(pid, {:leave, room_id, identifier})
-    end
+    GenServer.call(pid, {:leave, room_id, identifier})
   end
 
   @impl true
@@ -42,7 +42,7 @@ defmodule ChatsecWeb.ChannelState do
 
   @impl true
   def handle_call({:list_users, room_id}, _from, state) do
-    {:reply, Map.get(state, room_id), state}
+    {:reply, Map.get(state, room_id, []), state}
   end
 
   @impl true
@@ -53,6 +53,16 @@ defmodule ChatsecWeb.ChannelState do
   @impl true
   def handle_call({:delete, room_id}, _from, state) do
     {:reply, :ok, Map.delete(state, room_id)}
+  end
+
+  def handle_call({:delete_empty}, _from, state) do
+    survived =
+      state
+      |> Map.keys()
+      |> Enum.filter(fn room_id -> Map.get(state, room_id, []) == [] end)
+      |> then(fn rooms_to_be_deleted -> Map.drop(state, rooms_to_be_deleted) end)
+
+    {:reply, :ok, survived}
   end
 
   @impl true
@@ -70,9 +80,15 @@ defmodule ChatsecWeb.ChannelState do
 
   @impl true
   def handle_call({:leave, room_id, identifier}, _from, state) do
-    {:reply, :ok,
-     Map.update(state, room_id, [identifier], fn identifiers ->
-       Enum.reject(identifiers, &(&1 == identifier))
-     end)}
+    updated_state =
+      if Map.has_key?(state, room_id) do
+        Map.update!(state, room_id, fn identifiers ->
+          Enum.reject(identifiers, &(&1 == identifier))
+        end)
+      else
+        state
+      end
+
+    {:reply, :ok, updated_state}
   end
 end

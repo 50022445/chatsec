@@ -39,10 +39,10 @@ const liveSocket = new LiveSocket("/live", Socket, {
 });
 
 // Easter Egg :3
-//  console.log('%c" Dont hack me :3 "',
-//  'font-weight: bold; font-size: 100px;color: violet; text-align: center; text-shadow: 3px 3px 0 rgb(255,128,197) , \
-//    6px 6px 0 rgb(122,251,255) , 9px 9px 0 rgb(145,170,255) , 12px 12px 0 rgb(255,158,158) , 15px 15px 0 rgb(138,255,156) ,\
-//    18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)');
+ console.log('%cCaught ya!',
+  'font-weight:bold;font-size:100px;color: violet; text-align: center; text-shadow: 3px 3px 0 rgb(255,128,197) , \
+   6px 6px 0 rgb(122,251,255) , 9px 9px 0 rgb(145,170,255) , 12px 12px 0 rgb(255,158,158) , 15px 15px 0 rgb(138,255,156) ,\
+   18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)');
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
@@ -52,10 +52,6 @@ window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
 // connect if there are any LiveViews on the page
 liveSocket.connect();
 
-// expose liveSocket on window for web console debug logs and latency simulation:
-// >> liveSocket.enableDebug()
-// >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
-// >> liveSocket.disableLatencySim()
 window.simulateEnterKeyPress = simulateEnterKeyPress;
 window.donateModal = donateModal;
 window.sendAndReceiveMessages = sendAndReceiveMessages;

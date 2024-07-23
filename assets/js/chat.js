@@ -42,7 +42,7 @@ function checkAndConnect(value, callback) {
 				sessionStorage.setItem("username", resolvedUsername);
 				connectToChannel(resolvedUsername, callback);
 			})
-			.catch((error) => {
+			.catch(() => {
 				showToast("Unable to get username.", "danger");
 			});
 		return;
@@ -56,27 +56,23 @@ function connectToChannel(username, callback) {
 			username: username,
 		},
 	});
-
 	socket.connect();
-
 	const uuid = window.location.href.split("/").slice(-1)[0];
 	const channel = socket.channel(`room:${uuid}`, {
 		username: username,
 	});
-
+	window.channel = channel;
 	const presence = new Presence(channel);
 	presence.onSync(() => renderOnlineUsers(presence, channel));
-
 	channel
 		.join()
 		.receive("ok", () => {
 			showToast("Connected to channel.", "success");
-			// Invoke the callback with the channel
 			if (callback) {
 				callback(channel, username);
 			}
 		})
-		.receive("error", (resp) => {
+		.receive("error", () => {
 			showToast("Unable to join channel.", "danger");
 		});
 
@@ -95,35 +91,24 @@ function showDeleteChatModal(channel, username) {
     </div>
 </div>
         `;
-	// Create a div element and set its innerHTML to the modal HTML
 	const modalContainer = document.createElement("div");
 	modalContainer.innerHTML = modalHTML;
-
 	const portal = document.getElementById("portal");
 	const root = document.getElementById("root");
-
 	portal.appendChild(modalContainer);
-	// Add blur class to the body
 	root.classList.add("blur-2xl");
-	// Show the modal
 	document.getElementById("deleteChatModal").style.display = "flex";
-
-	// Function to close the modal and remove it from the DOM
 	function closeModal() {
 		document.getElementById("deleteChatModal").style.display = "none";
 		portal.removeChild(modalContainer);
 		root.classList.remove("blur-2xl");
 	}
-
-	// Add event listener to close the modal
 	document.getElementById("closeModalButton").addEventListener("click", () => {
 		closeModal();
 	});
-
-	// Add event listener to handle form submission
 	document.getElementById("submitModalButton").addEventListener("click", () => {
-		closeModal();
 		deleteChat(channel, username);
+		closeModal();
 	});
 }
 
@@ -135,9 +120,8 @@ function deleteChat(channel, username) {
 	} catch (e) {
 		showToast("Deleting room failed!", "danger");
 	}
-
-	const uuid = window.location.href.split("/").slice(-1)[0];
-	window.location = `/chat/delete/${uuid}`;
+	sessionStorage.clear();
+	window.location = "/";
 }
 
 export { redirectUserToChat, showDeleteChatModal, checkAndConnect };

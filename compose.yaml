@@ -13,11 +13,10 @@ services:
       - traefik.http.services.chatsec.loadbalancer.server.port=4000
       - traefik.enable=true
       - traefik.http.routers.chatsec.tls=true
-      - traefik.http.routers.chatsec.tls.certresolver=myresolver
     depends_on:
       - reverse-proxy
   reverse-proxy:
-    image: traefik:v2.11
+    image: traefik:v3.1
     restart: unless-stopped
     command:
       - "--log.level=DEBUG"
@@ -28,10 +27,6 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=letsencryptchatsec.universe845@passmail.net"
-      - "--certificatesresolvers.myresolver.acme.storage=acme.json"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--providers.docker.defaultRule=Host(`{{ index .Labels \"com.docker.compose.service\" }}.0x63686174.com`)"
     ports:
       # The HTTP port
@@ -40,11 +35,6 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      # Raises error if acme.json does not exist 
-      - type: bind
-        source: ./acme.json
-        target: /acme.json
-        bind:
-          create_host_path: false
     labels:
       - "traefik.http.routers.chatsec.rule=Host(`chatsec.docker.localhost`)"
+      - "traefik.http.middlewares.test-ratelimit.ratelimit.average=3"

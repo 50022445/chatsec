@@ -17,37 +17,41 @@
   </button>
 </div>
 
-  <div class="container mx-auto px-4 flex justify-center space-x-0 sm:space-x-8">
-    <div class="w-full sm:w-2/3 bg-gray-800 p-4 sm:p-8 rounded-lg shadow-lg">
-      <p id="short-text" class="text-base sm:text-lg text-white leading-relaxed">
+<div class="container mx-auto px-4 flex justify-center space-x-0 sm:space-x-8">
+  <div class="w-full sm:w-2/3 bg-gray-800 p-4 sm:p-8 rounded-lg shadow-lg">
+    <p id="short-text" class="text-base sm:text-lg text-white leading-relaxed">
+      End-to-end encryption is crucial for protecting the privacy and security of digital communications, ensuring
+      that only the intended recipients can read the messages.<br />
+      <span id="tell-me-more" class="text-blue-500 cursor-pointer">
+        Tell me more...
+      </span>
+    </p>
+    <div id="full-text-container" class="hidden h-60 sm:h-80 md:h-auto overflow-y-auto">
+      <p id="full-text" class="text-base sm:text-lg text-white leading-relaxed">
         End-to-end encryption is crucial for protecting the privacy and security of digital communications, ensuring
-        that only the intended recipients can read the messages.<br><span id="tell-me-more" class="text-blue-500 cursor-pointer">Tell me more...</span>
-      </p>
-      <div id="full-text-container" class="hidden h-60 sm:h-80 md:h-auto overflow-y-auto">
-        <p id="full-text" class="text-base sm:text-lg text-white leading-relaxed">
-          End-to-end encryption is crucial for protecting the privacy and security of digital communications, ensuring
-          that only the intended recipients can read the messages.
-          This form of encryption prevents unauthorized access by hackers, <span class="text-red-600">government
+        that only the intended recipients can read the messages.
+        This form of encryption prevents unauthorized access by hackers, <span class="text-red-600">government
                   agencies</span>, and even the service providers themselves, safeguarding sensitive information from
-          being intercepted or tampered with.
-          Digital freedom, on the other hand, encompasses the right to access, create, and share information freely
-          and securely on the internet.
-          Together, end-to-end encryption and digital freedom form the bedrock of a free and open digital society,
-          empowering individuals to communicate and collaborate without fear of surveillance or censorship.
-          <br />&nbsp;<br />
-          TL;DR: Government bad <span class="inline-flex items-center"><img src="/images/bonk.png" alt="TL;DR" class="w-auto h-8 ml-1"></span>
-        </p>
-      </div>
+        being intercepted or tampered with.
+        Digital freedom, on the other hand, encompasses the right to access, create, and share information freely
+        and securely on the internet.
+        Together, end-to-end encryption and digital freedom form the bedrock of a free and open digital society,
+        empowering individuals to communicate and collaborate without fear of surveillance or censorship.
+        <br />&nbsp;<br /> TL;DR: Government bad
+        <span class="inline-flex items-center">
+          <img src="/images/bonk.png" alt="TL;DR" class="w-auto h-8 ml-1" />
+        </span>
+      </p>
     </div>
   </div>
+</div>
 
-  <script>
-    document.getElementById('tell-me-more').addEventListener('click', function() {
-      document.getElementById('short-text').classList.add('hidden');
-      document.getElementById('full-text-container').classList.remove('hidden');
-    });
-  </script>
-
+<script>
+  document.getElementById('tell-me-more').addEventListener('click', function() {
+    document.getElementById('short-text').classList.add('hidden');
+    document.getElementById('full-text-container').classList.remove('hidden');
+  });
+</script>
 
 <footer class="fixed bottom-0 right-0 z-20 w-full flex justify-end p-4 md:p-6 dark:bg-gray-900">
   <button onclick="donateModal()">

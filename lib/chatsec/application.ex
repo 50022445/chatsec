@@ -18,7 +18,8 @@ defmodule Chatsec.Application do
       # Start to serve requests, typically the last entry
       ChatsecWeb.Endpoint,
       ChatsecWeb.ChannelState,
-      ChatsecWeb.Presence
+      ChatsecWeb.Presence,
+      Chatsec.Scheduler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -2,14 +2,18 @@ import { handshake } from "./handshake";
 import { encryptMessage, decryptMessage } from "./encrypt";
 import { showToast } from "./toast";
 
+let secretKey;
+let currentChannel;
+let currentUsername;
+let initialize = false;
+
 async function sendAndReceiveMessages(
 	chatInput,
 	username,
 	channel,
 	messagesContainer,
 ) {
-	const secretKey = await handshake(channel, username);
-	chatInput.addEventListener("keypress", async (event) => {
+	async function handleKeyPress(event) {
 		if (!event.shiftKey && event.key === "Enter") {
 			event.preventDefault();
 			const msg = chatInput.value.trim();
@@ -29,10 +33,9 @@ async function sendAndReceiveMessages(
 				showToast("Sending message failed!", "danger");
 			}
 		}
-	});
+	}
 
-	// retrieve the messages
-	channel.on("new_msg", async (payload) => {
+	async function handleNewMsg(payload) {
 		try {
 			if (payload.body) {
 				const usernameItem = document.createElement("span");
@@ -46,7 +49,6 @@ async function sendAndReceiveMessages(
 				usernameItem.className = "username";
 				usernameItem.innerText = payload.username;
 				messageItem.innerText = decryptedMessage;
-				// Use Tailwind CSS classes to control width and word break
 				messageItem.className = "max-w-full break-words";
 
 				const divContainer = document.createElement("div");
@@ -69,11 +71,30 @@ async function sendAndReceiveMessages(
 		} catch (error) {
 			showToast("Something went wrong:", "danger");
 		}
-	});
+	}
+	// Check if we need to perform a handshake again
+	if (
+		!secretKey ||
+		currentChannel !== channel ||
+		currentUsername !== username
+	) {
+		secretKey = await handshake(null, channel, username);
+		currentChannel = channel;
+		currentUsername = username;
+	}
 
-	channel.on("room_deleted", (payload) => {
+	if (!initialize) {
+		chatInput.addEventListener("keypress", handleKeyPress);
+		channel.on("new_msg", handleNewMsg);
+		channel.on("room_deleted", handleRoomDeleted);
+
+		initialize = true;
+	}
+
+	function handleRoomDeleted() {
+		sessionStorage.clear();
 		window.location = "/";
-	});
+	}
 }
 
 function simulateEnterKeyPress(element) {

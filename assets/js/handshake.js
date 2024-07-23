@@ -26,11 +26,9 @@ async function getAndConvertPublicKey(
 	pubkeyMap,
 	privateKey,
 ) {
-	if (!pubkeyMap.has(publicKey)) {
-		pubkeyMap.set(publicKey, username);
-		const convertedPublicKey = await importPublicKey(publicKey);
-		return await deriveSecretKey(privateKey, convertedPublicKey);
-	}
+	pubkeyMap.set(publicKey, username);
+	const convertedPublicKey = await importPublicKey(publicKey);
+	return await deriveSecretKey(privateKey, convertedPublicKey);
 }
 
 function syn(exportedPublicKey, username, channel) {
@@ -44,42 +42,72 @@ function syn(exportedPublicKey, username, channel) {
 	}
 }
 
-async function handshake(channel, username) {
-	let secretKey;
-	let acknowledged = false;
-	const pubkeyMap = new Map();
-	const { keyPair, exportedPublicKey } = await generateAndAddToMap(
-		username,
-		pubkeyMap,
-	);
+async function handshake(value, channel, username) {
+	const uuid = window.location.href.split("/").slice(-1)[0];
+	let secretKey = value ?? sessionStorage.getItem(uuid);
+	if (!secretKey) {
+		let acknowledged = false;
+		const pubkeyMap = new Map();
+		const { keyPair, exportedPublicKey } = await generateAndAddToMap(
+			username,
+			pubkeyMap,
+		);
 
-	channel.on("publickey", async (payload) => {
-		const pubkey = payload.publickey;
-		const user = payload.username;
-		if (user !== username) {
-			if (!pubkeyMap.has(pubkey)) {
-				secretKey = await getAndConvertPublicKey(
-					pubkey,
-					user,
-					pubkeyMap,
-					keyPair.privateKey,
-				);
-				// Send your public key back to the other user
-				syn(exportedPublicKey, username, channel);
-				// Set the acknowledgment flag
-				acknowledged = true;
+		channel.on("publickey", async (payload) => {
+			const pubkey = payload.publickey;
+			const user = payload.username;
+			if (user !== username) {
+				if (!pubkeyMap.has(pubkey)) {
+					secretKey = await getAndConvertPublicKey(
+						pubkey,
+						user,
+						pubkeyMap,
+						keyPair.privateKey,
+					);
+					syn(exportedPublicKey, username, channel);
+					acknowledged = true;
+				}
 			}
+		});
+
+		// Initial send of the public key
+		syn(exportedPublicKey, username, channel);
+		while (!acknowledged) {
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 		}
-	});
 
-	// Initial send of the public key
-	syn(exportedPublicKey, username, channel);
-	while (!acknowledged) {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
+		showToast("Handshake completed!", "success");
+
+		const secretKeyBase64 = await convertKeyToBase64(secretKey);
+		sessionStorage.setItem(uuid, secretKeyBase64);
+		return secretKey;
 	}
+	return convertBase64ToKey(secretKey);
+}
 
-	showToast("Handshake completed!", "success");
-	return secretKey;
+async function convertKeyToBase64(key) {
+	const exportedKey = await crypto.subtle.exportKey("raw", key);
+	const base64Key = btoa(String.fromCharCode(...new Uint8Array(exportedKey)));
+	return base64Key;
+}
+
+async function convertBase64ToKey(base64Key) {
+	const binaryString = atob(base64Key);
+	const binaryLen = binaryString.length;
+	const bytes = new Uint8Array(binaryLen);
+	for (let i = 0; i < binaryLen; i++) {
+		bytes[i] = binaryString.charCodeAt(i);
+	}
+	const key = await crypto.subtle.importKey(
+		"raw",
+		bytes.buffer,
+		{
+			name: "AES-GCM",
+		},
+		true,
+		["encrypt", "decrypt"],
+	);
+	return key;
 }
 
 export { handshake };

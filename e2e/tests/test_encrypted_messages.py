@@ -41,7 +41,7 @@ def test_e2ee_conversation(setup):
     bob.get_by_placeholder("Username").fill("Bob")
     bob.click("text='Submit'")
 
-    bob.locator("text='Handshake completed!'").wait_for(state="visible")# Wait for the handshake to succeed
+    bob.locator("text='Handshake completed!'").wait_for(state="visible") # Wait for the handshake to succeed
     message = "Hey Alice!"
     bob.get_by_placeholder("Write a message..").fill(message)
     bob.keyboard.press('Enter')
@@ -52,6 +52,8 @@ def test_e2ee_conversation(setup):
     bob.click("text='Delete room'")
     bob.locator("text='Confirm deletion?'").wait_for(state="visible") # Wait for the delete modal to show up
     bob.click("text='Delete chat'")
-    time.sleep(1)
     
+    # Wait for Alice to be redirected to the home page
+    alice.wait_for_url(f"https://{IP}:{PORT}/")
+
     assert alice.url == f"https://{IP}:{PORT}/", "The room was not deleted properly."

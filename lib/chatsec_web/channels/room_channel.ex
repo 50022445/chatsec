@@ -25,24 +25,31 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("adios", %{"username" => username}, socket) do
-    broadcast!(socket, "room_deleted", %{"username" => username})
+  def handle_in("adios", _, socket) do
+    ChannelState.delete_room(socket.assigns.room_id)
+    broadcast!(socket, "room_deleted", %{})
     {:noreply, socket}
   end
 
   def handle_info({:after_join, username}, socket) do
-    {:ok, _} =
-      Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
-
+    track_user_presence(socket, username)
     broadcast!(socket, "after_join", %{"username" => username})
-    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 
   def terminate(_, socket) do
+    Presence.untrack(socket, socket.assigns.user_id)
+
     case socket.assigns do
-      %{user_id: username, room_id: room_id} -> ChatsecWeb.ChannelState.leave(room_id, username)
+      %{user_id: username, room_id: room_id} -> ChannelState.leave(room_id, username)
       _ -> :ok
     end
+
+    :ok
+  end
+
+  defp track_user_presence(socket, username) do
+    Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
+    push(socket, "presence_state", Presence.list(socket))
   end
 end

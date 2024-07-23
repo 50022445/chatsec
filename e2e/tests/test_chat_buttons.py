@@ -34,14 +34,6 @@ def test_copy_link_button(setup):
     # Check for the "Copied to clipboard" message
     assert page.is_visible("text='Copied to clipboard.'"), "The 'Copied to clipboard' message did not appear."
 
-def test_delete_room_button(setup):
-    page = setup
-    page.click("text='Delete room'")
-    page.click("text='Delete chat'")
-    # Wait for the URL to change back to the homepage
-    page.wait_for_url(f"https://{IP}:{PORT}/", timeout=5000)
-    assert page.url == f"https://{IP}:{PORT}/", "The page did not redirect to the homepage after deleting the chat."
-
 def test_username_shows_as_online(setup):
     page = setup
     time.sleep(1)
