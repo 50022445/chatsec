@@ -28,9 +28,7 @@ defmodule ChatsecWeb.RoomChannel do
   def handle_in("adios", _, socket) do
     IO.puts(socket.assigns.room_id)
     ChannelState.delete_room(socket.assigns.room_id)
-    ChannelState.get_rooms() |> IO.inspect()
     broadcast!(socket, "room_deleted", %{})
-    ChannelState.get_rooms() |> IO.inspect()
     {:noreply, socket}
   end
 
