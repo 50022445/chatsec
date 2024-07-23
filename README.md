@@ -30,20 +30,38 @@ After the repository is cloned you need to create a .env file containing a `SECR
 **! to use this command, keep in mind that you have to have pwgen installed on your system.**
 
 ``` sh
-  cd chatsec
-  echo "SECRET_KEY_BASE=$(pwgen -y 64 1)" > .env 
+    cd chatsec
+    echo "SECRET_KEY_BASE=$(pwgen -y 64 1)" > .env 
   ```
 
-#### 2. Building and running the compose.yaml
+#### 2. Configure Traefik
+The project uses [Traefik Proxy](https://doc.traefik.io/traefik/) to route the incoming webtraffic to the running Chatsec instance.
+Before the docker images can be build, we need to configure the Traefik image in the `compose.yaml`.
+
+Make sure the following lines in the `compose.yaml` file are configured to your domain or IP address.
+
+``` sh
+    environment: 
+      PHX_HOST: "<YOUR_DOMAIN.com>"
+```
+
+and
+
+``` sh
+    command: 
+      - "--providers.docker.defaultRule=Host(`{{ index .Labels \"com.docker.compose.service\" }}.<YOUR_DOMAIN.com>`)"
+```
+
+#### 3. Building and running the compose.yaml
 
 After the .env file is created containing our `SECRET_KEY_BASE` variable, we can start building the `docker images`.
 (Make sure you are inside the chatsec folder).
 
  ``` sh
-   docker-compose up -d --build
+    docker-compose up -d --build
  ```
 
-This command will build the services needed for Chatsec to function properly. The project uses [Traefik Proxy](https://doc.traefik.io/traefik/) to route the incoming webtraffic to the running Chatsec instance.
+This command will build the services needed for Chatsec to function properly. 
 
 That's it! You have build your own instance of Chatsec :partying_face:
 
@@ -53,11 +71,16 @@ End-to-end tests can be found in the `e2e` folder in the Chatsec repository. Thi
 
 The end-to-end tests are written in `python` and use `Playwright` to test the functionality of the application.
 
-Before running the tests, make sure your IP-address or domain is in the `e2e/tests/.env` file. You need to create this file yourself!
+Before running the tests, make sure your IP-address or domain is in the `e2e/tests/.env` file. You need to create this file yourself! The file structure is very basic and looks like this:
+
+```sh
+    IP='<IP>'
+    PORT='<PORT>'
+```
 
 #### 1. Running the tests
 
 To run the end-to-end tests (make sure you are in the e2e folder, and the application is running):
  ``` sh
-   poetry run pytest
+    poetry run pytest
  ```
