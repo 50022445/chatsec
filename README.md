@@ -51,7 +51,7 @@ and
 
 ``` sh
     command: 
-      - "--providers.docker.defaultRule=Host(`{{ index .Labels \"com.docker.compose.service\" }}.<YOUR_DOMAIN.com>`)"
+      - "--providers.docker.defaultRule=Host()"
 ```
 
 #### 3. Building and running the compose.yaml
