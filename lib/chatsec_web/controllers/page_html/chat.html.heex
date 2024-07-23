@@ -58,36 +58,36 @@
   </div>
 
 <script type="text/javascript">
-  document.addEventListener("DOMContentLoaded", () => {
-    const chatInput = document.getElementById("chat-input");
-    const messagesContainer = document.getElementById("messages");
-    function autoScroll() {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    };
-    function adjustTextareaHeight() {
-      chatInput.style.height = 'auto';
-      chatInput.style.height = `${chatInput.scrollHeight}px`;
-    };
+document.addEventListener("DOMContentLoaded", () => {
+	const chatInput = document.getElementById("chat-input");
+	const messagesContainer = document.getElementById("messages");
+	function autoScroll() {
+		messagesContainer.scrollTop = messagesContainer.scrollHeight;
+	}
+	function adjustTextareaHeight() {
+		chatInput.style.height = "auto";
+		chatInput.style.height = `${chatInput.scrollHeight}px`;
+	}
 
-    checkAndConnect(null, (channel, username) => {
-      sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
+	document.getElementById("sendButton").addEventListener("click", () => {
+		simulateEnterKeyPress(chatInput);
+	});
+	document
+		.getElementById("showDeleteChatModal")
+		.addEventListener("click", () => {
+			showDeleteChatModal(window.channel, sessionStorage.getItem("username"));
+		});
 
-      document.getElementById('showDeleteChatModal').addEventListener('click', () => {
-        showDeleteChatModal(channel, username);
-      });
+	chatInput.addEventListener("input", adjustTextareaHeight);
+	checkAndConnect(null, (channel, username) => {
+		sendAndReceiveMessages(chatInput, username, channel, messagesContainer);
+	});
+	const observer = new MutationObserver(() => {
+		autoScroll();
+	});
 
-      document.getElementById('sendButton').addEventListener('click', () => {
-          simulateEnterKeyPress(chatInput);
-      });
-
-      chatInput.addEventListener('input', adjustTextareaHeight);
-    });
-    const observer = new MutationObserver(() => {
-      autoScroll();
-    });
-    
-    observer.observe(messagesContainer, {
-      childList: true
-    });
+	observer.observe(messagesContainer, {
+		childList: true,
+	});
 });
 </script>

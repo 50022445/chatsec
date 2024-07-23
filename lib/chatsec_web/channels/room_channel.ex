@@ -5,11 +5,6 @@ defmodule ChatsecWeb.RoomChannel do
 
   def join("room:" <> private_room_id, %{"username" => username}, socket)
       when is_binary(username) do
-    existing_socket = get_existing_socket(private_room_id, username)
-    if existing_socket do
-      send(existing_socket, {:disconnect, :reconnect})
-    end
-
     send(self(), {:after_join, username})
     ChannelState.join(private_room_id, username)
     {:ok, assign(socket, user_id: username, room_id: private_room_id)}
@@ -41,29 +36,17 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:disconnect, :reconnect}, socket) do
-    {:stop, :normal, socket}
-  end
-
   def terminate(_, socket) do
     Presence.untrack(socket, socket.assigns.user_id)
     case socket.assigns do
       %{user_id: username, room_id: room_id} -> ChatsecWeb.ChannelState.leave(room_id, username)
       _ -> :ok
     end
+    :ok
   end
 
   defp track_user_presence(socket, username) do
     Presence.track(socket, username, %{online_at: to_string(System.system_time(:second))})
     push(socket, "presence_state", Presence.list(socket))
-  end
-
-  defp get_existing_socket(private_room_id, username) do
-    Presence.list("room:" <> private_room_id)
-    |> Enum.find(fn {user, _meta} -> user == username end)
-    |> case do
-      nil -> nil
-      {_, meta} -> List.first(meta)[:pid]
-    end
   end
 end

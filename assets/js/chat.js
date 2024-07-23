@@ -42,7 +42,7 @@ function checkAndConnect(value, callback) {
 				sessionStorage.setItem("username", resolvedUsername);
 				connectToChannel(resolvedUsername, callback);
 			})
-			.catch((error) => {
+			.catch(() => {
 				showToast("Unable to get username.", "danger");
 			});
 		return;
@@ -50,37 +50,38 @@ function checkAndConnect(value, callback) {
 	connectToChannel(username, callback);
 }
 
+
 function connectToChannel(username, callback) {
 	const socket = new Socket("/socket", {
 		params: {
 			username: username,
 		},
 	});
-
-	socket.connect();
-
+	window.socket = socket;
+	window.socket.connect();
 	const uuid = window.location.href.split("/").slice(-1)[0];
-	const channel = socket.channel(`room:${uuid}`, {
-		username: username,
-	});
+	const channel = window.socket.channel(`room:${uuid}`, {
+			username: username,
+		});
 
+	channel = window.channel;
 	const presence = new Presence(channel);
 	presence.onSync(() => renderOnlineUsers(presence, channel));
-
 	channel
 		.join()
 		.receive("ok", () => {
 			showToast("Connected to channel.", "success");
-			// Invoke the callback with the channel
 			if (callback) {
 				callback(channel, username);
 			}
 		})
-		.receive("error", (resp) => {
+		.receive("error", () => {
 			showToast("Unable to join channel.", "danger");
 		});
+
 	return { channel, username };
 }
+
 
 function showDeleteChatModal(channel, username) {
 	const modalHTML = `

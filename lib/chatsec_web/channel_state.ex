@@ -42,7 +42,7 @@ defmodule ChatsecWeb.ChannelState do
 
   @impl true
   def handle_call({:list_users, room_id}, _from, state) do
-    {:reply, Map.get(state, room_id), state}
+    {:reply, Map.get(state, room_id, []), state}
   end
 
   @impl true
