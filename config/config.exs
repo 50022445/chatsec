@@ -31,6 +31,12 @@ config :chatsec, ChatsecWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :chatsec, Chatsec.Mailer, adapter: Swoosh.Adapters.Local
 
+config :chatsec, Chatsec.Scheduler,
+  jobs: [
+    # Every minute
+    {"@daily", {ChatsecWeb.ChannelState, :delete_all_empty_rooms, []}}
+  ]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
