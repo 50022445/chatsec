@@ -50,21 +50,17 @@ function checkAndConnect(value, callback) {
 	connectToChannel(username, callback);
 }
 
-
 function connectToChannel(username, callback) {
 	const socket = new Socket("/socket", {
 		params: {
 			username: username,
 		},
 	});
-	window.socket = socket;
-	window.socket.connect();
+	socket.connect();
 	const uuid = window.location.href.split("/").slice(-1)[0];
-	const channel = window.socket.channel(`room:${uuid}`, {
-			username: username,
-		});
-
-	channel = window.channel;
+	const channel = socket.channel(`room:${uuid}`, {
+		username: username,
+	});
 	const presence = new Presence(channel);
 	presence.onSync(() => renderOnlineUsers(presence, channel));
 	channel
@@ -81,7 +77,6 @@ function connectToChannel(username, callback) {
 
 	return { channel, username };
 }
-
 
 function showDeleteChatModal(channel, username) {
 	const modalHTML = `
