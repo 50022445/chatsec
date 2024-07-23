@@ -38,10 +38,12 @@ defmodule ChatsecWeb.RoomChannel do
 
   def terminate(_, socket) do
     Presence.untrack(socket, socket.assigns.user_id)
+
     case socket.assigns do
       %{user_id: username, room_id: room_id} -> ChatsecWeb.ChannelState.leave(room_id, username)
       _ -> :ok
     end
+
     :ok
   end
 
