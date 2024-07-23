@@ -2,6 +2,8 @@
 
 Chatsec (Chat Secure) is a Elixir based end-to-end encrypted chat service build on the [Phoenix framework](https://www.phoenixframework.org/).
 
+![Chatsec Homepage](images/homepage.png)
+
 ### How does it work?
 
 **Summary**
