@@ -44,7 +44,7 @@ Make sure the following lines in the `compose.yaml` file are configured to your 
 
 ``` sh
     environment: 
-      PHX_HOST: "<YOUR_DOMAIN.com>"
+      PHX_HOST: "YOUR_DOMAIN.com"
 ```
 
 and
@@ -76,8 +76,8 @@ The end-to-end tests are written in `python` and use `Playwright` to test the fu
 Before running the tests, make sure your IP-address or domain is in the `e2e/tests/.env` file. You need to create this file yourself! The file structure is very basic and looks like this:
 
 ```sh
-    IP='<IP>'
-    PORT='<PORT>'
+    IP='IP'
+    PORT='PORT'
 ```
 
 #### 1. Running the tests
