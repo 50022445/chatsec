@@ -35,12 +35,6 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      # Raises error if acme.json does not exist 
-      - type: bind
-        source: ./acme.json
-        target: /acme.json
-        bind:
-          create_host_path: false
     labels:
       - "traefik.http.routers.chatsec.rule=Host(`chatsec.docker.localhost`)"
       - "traefik.http.middlewares.test-ratelimit.ratelimit.average=3"
