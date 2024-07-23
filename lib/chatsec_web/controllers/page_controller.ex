@@ -14,14 +14,6 @@ defmodule ChatsecWeb.PageController do
     redirect(conn, to: ~p"/chat/#{uuid}")
   end
 
-  def delete_room(conn, %{"chat_id" => chatid}) do
-    if chatid in ChannelState.get_rooms() do
-      ChannelState.delete_room(chatid)
-    end
-
-    redirect(conn, to: ~p"/")
-  end
-
   def chat(conn, %{"chat_id" => chatid}) do
     if chatid in ChannelState.get_rooms() and check_if_private(chatid) do
       render(conn, :chat, layout: false)

@@ -25,6 +25,6 @@ defmodule ChatsecWeb.ChannelStateTest do
     assert [user] == ChannelState.list_users(pid, room_id)
 
     assert :ok == ChannelState.leave(pid, room_id, user)
-    assert nil == ChannelState.list_users(pid, room_id)
+    assert [] == ChannelState.list_users(pid, room_id)
   end
 end

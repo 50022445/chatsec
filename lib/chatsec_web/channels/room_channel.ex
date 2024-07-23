@@ -25,8 +25,12 @@ defmodule ChatsecWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("adios", %{"username" => username}, socket) do
-    broadcast!(socket, "room_deleted", %{"username" => username})
+  def handle_in("adios", _, socket) do
+    IO.puts(socket.assigns.room_id)
+    ChannelState.delete_room(socket.assigns.room_id)
+    ChannelState.get_rooms() |> IO.inspect()
+    broadcast!(socket, "room_deleted", %{})
+    ChannelState.get_rooms() |> IO.inspect()
     {:noreply, socket}
   end
 
@@ -40,7 +44,7 @@ defmodule ChatsecWeb.RoomChannel do
     Presence.untrack(socket, socket.assigns.user_id)
 
     case socket.assigns do
-      %{user_id: username, room_id: room_id} -> ChatsecWeb.ChannelState.leave(room_id, username)
+      %{user_id: username, room_id: room_id} -> ChannelState.leave(room_id, username)
       _ -> :ok
     end
 

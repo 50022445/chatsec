@@ -80,9 +80,15 @@ defmodule ChatsecWeb.ChannelState do
 
   @impl true
   def handle_call({:leave, room_id, identifier}, _from, state) do
-    {:reply, :ok,
-     Map.update(state, room_id, [identifier], fn identifiers ->
-       Enum.reject(identifiers, &(&1 == identifier))
-     end)}
+    updated_state =
+      if Map.has_key?(state, room_id) do
+        Map.update!(state, room_id, fn identifiers ->
+          Enum.reject(identifiers, &(&1 == identifier))
+        end)
+      else
+        state
+      end
+
+    {:reply, :ok, updated_state}
   end
 end

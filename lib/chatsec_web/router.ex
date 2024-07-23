@@ -18,7 +18,6 @@ defmodule ChatsecWeb.Router do
     pipe_through :browser
     get "/", PageController, :home
     get "/chat/create", PageController, :create_room
-    get "/chat/delete/:chat_id", PageController, :delete_room
     get "/chat/:chat_id", PageController, :chat
   end
 
