@@ -3,8 +3,6 @@ defmodule ChatsecWeb.PageController do
   use ChatsecWeb, :controller
 
   def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
     render(conn, :home, layout: false)
   end
 
@@ -14,19 +12,15 @@ defmodule ChatsecWeb.PageController do
     redirect(conn, to: ~p"/chat/#{uuid}")
   end
 
+  def room_not_found(conn, _params) do
+    render(conn, :room_not_found, layout: false)
+  end
+
   def chat(conn, %{"chat_id" => chatid}) do
-    if chatid in ChannelState.get_rooms() and check_if_private(chatid) do
+    if chatid in ChannelState.get_rooms() do
       render(conn, :chat, layout: false)
     else
       render(conn, :room_not_found, layout: false)
-    end
-  end
-
-  defp check_if_private(chatid) do
-    users_in_chat = ChannelState.list_users(chatid)
-
-    if Enum.count(users_in_chat) < 2 do
-      true
     end
   end
 end

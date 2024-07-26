@@ -36,7 +36,6 @@ function renderOnlineUsers(presence) {
 function checkAndConnect(value, callback) {
 	const username = value ?? sessionStorage.getItem("username");
 	if (!username) {
-		// Handle the case where username is not provided
 		usernameForm()
 			.then((resolvedUsername) => {
 				sessionStorage.setItem("username", resolvedUsername);
@@ -63,17 +62,17 @@ function connectToChannel(username, callback) {
 	});
 	window.channel = channel;
 	const presence = new Presence(channel);
-	presence.onSync(() => renderOnlineUsers(presence, channel));
 	channel
 		.join()
 		.receive("ok", () => {
 			showToast("Connected to channel.", "success");
 			if (callback) {
+                presence.onSync(() => renderOnlineUsers(presence, channel));
 				callback(channel, username);
 			}
 		})
 		.receive("error", () => {
-			showToast("Unable to join channel.", "danger");
+            window.location.href = "/"
 		});
 
 	return { channel, username };
