@@ -1,4 +1,4 @@
-# Chatsec :closed_lock_with_key:
+# [Chatsec :closed_lock_with_key:](https://chatsec.app)
 
 Chatsec (Chat Secure) is a Elixir based end-to-end encrypted chat service build on the [Phoenix framework](https://www.phoenixframework.org/).
 
@@ -7,6 +7,7 @@ Chatsec (Chat Secure) is a Elixir based end-to-end encrypted chat service build 
 ### How does it work?
 
 **Summary**
+  * Chatsec is designed for use on computer browsers and is not optimized for mobile phones.
   * Chatrooms can hold a maximum of 2 people.
   * Messages are encrypted/decrypted using a shared secret.
   * Keypairs are generated using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).
@@ -19,6 +20,9 @@ When a new chat is created, The creator joins the channel and gets a a Elliptic-
 When the handshake process completes, both users have a created a shared secret which is then used for communication. **Messages are only broadcasted once!**
 
 Chat history disappears upon chat deletion or both users leaving the room and thereby closing the session. Refreshing the browser will also remove the chat history.
+
+## Instances
+A public instance of Chatsec is running at [chatsec.app](https://chatsec.app) 🤠
 
 ## Running Chatsec :whale:
 
@@ -53,6 +57,8 @@ and
     command: 
       - "--providers.docker.defaultRule=Host()"
 ```
+
+Make sure you have a valid SSL certificate for your domain! the app will not work without one.
 
 #### 3. Building and running the compose.yaml
 
