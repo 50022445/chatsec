@@ -7,7 +7,6 @@ Chatsec (Chat Secure) is a Elixir based end-to-end encrypted chat service build 
 ### How does it work?
 
 **Summary**
-  * Chatsec is designed for use on computer browsers and is not optimized for mobile phones.
   * Chatrooms can hold a maximum of 2 people.
   * Messages are encrypted/decrypted using a shared secret.
   * Keypairs are generated using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).
