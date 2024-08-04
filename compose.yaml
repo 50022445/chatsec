@@ -8,7 +8,7 @@ services:
       - .env
     environment: 
       PHX_SERVER: yes
-      PHX_HOST: "chatsec.0x63686174.com"
+      PHX_HOST: "chatsec.app"
     labels:
       - traefik.http.services.chatsec.loadbalancer.server.port=4000
       - traefik.enable=true
@@ -27,7 +27,7 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.docker.defaultRule=Host(`{{ index .Labels \"com.docker.compose.service\" }}.0x63686174.com`)"
+      - "--providers.docker.defaultRule=Host(`chatsec.app`)"
     ports:
       # The HTTP port
       - "80:80"
