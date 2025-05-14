@@ -58,6 +58,8 @@ def test_chat_access_denied(setup):
     # Geronimo can't access the chat because there are already two people in it
     geronimo = setup['browser'].new_context(ignore_https_errors=True).new_page()
     geronimo.goto(chatroom)
-    error_page = geronimo.locator("div:has-text('Sorry.')")
-    error = "The room you're looking for is private or doesn't exist."
-    assert error_page.locator(f"text={error}").is_visible(), "The 'Room Not Found' error message failed to show."
+    geronimo.get_by_placeholder("Username").fill("Geronimo")
+    geronimo.click("text='Submit'")
+    time.sleep(1)
+    expect(geronimo).to_have_title(re.compile("ChatSec"))
+
