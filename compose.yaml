@@ -12,6 +12,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.chatsec.loadbalancer.server.port=4000"
+      # Traefik polls this itself (not a Docker-level HEALTHCHECK) and stops
+      # routing new requests to the container the moment a poll fails or
+      # times out, rather than proxying into a container that's up but not
+      # actually responding.
+      - "traefik.http.services.chatsec.loadbalancer.healthcheck.path=/health"
+      - "traefik.http.services.chatsec.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.chatsec.loadbalancer.healthcheck.timeout=5s"
       - "traefik.http.routers.chatsec.rule=Host(`chatsec.app`)"
       - "traefik.http.routers.chatsec.entrypoints=websecure"
       - "traefik.http.routers.chatsec.tls=true"
