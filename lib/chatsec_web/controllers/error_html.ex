@@ -15,7 +15,15 @@ defmodule ChatsecWeb.ErrorHTML do
   #
   embed_templates "error_html/*"
 
-  # The default is to render a plain text page based on
-  # the template name. For example, "404.html" becomes
-  # "Not Found".
+  # embed_templates/1 above only covers the statuses that have a matching
+  # .heex file (404, 500) - any other status Phoenix asks for (400 from a
+  # malformed request body, 403, 422, etc.) would otherwise crash with
+  # "no \"<status>\" html template defined" instead of just responding. This
+  # mirrors Phoenix's own un-customized default: a plain text page based on
+  # the template name, e.g. "400.html" becomes "Bad Request". These statuses
+  # are overwhelmingly bot/scanner traffic hitting nonexistent routes or
+  # sending garbage bodies, not real users, so a plain fallback is enough.
+  def render(template, _assigns) do
+    Phoenix.Controller.status_message_from_template(template)
+  end
 end
