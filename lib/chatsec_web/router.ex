@@ -13,6 +13,13 @@ defmodule ChatsecWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # No :browser pipeline here on purpose - Traefik polls this constantly
+  # (see compose.yaml), and it has no business paying for session/CSRF/
+  # layout setup on every poll.
+  scope "/", ChatsecWeb do
+    get "/health", PageController, :health
+  end
+
   scope "/", ChatsecWeb do
     pipe_through :browser
     get "/", PageController, :home

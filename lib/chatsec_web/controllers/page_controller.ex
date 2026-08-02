@@ -2,6 +2,12 @@ defmodule ChatsecWeb.PageController do
   use ChatsecWeb, :controller
   alias ChatsecWeb.ChannelState
 
+  # Deliberately outside the :browser pipeline (see router.ex) - no session,
+  # CSRF, or layout work, just confirms the app is up and responding.
+  def health(conn, _params) do
+    send_resp(conn, 200, "OK")
+  end
+
   def home(conn, _params) do
     render(conn, :home, layout: false)
   end
