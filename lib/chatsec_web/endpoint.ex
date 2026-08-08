@@ -62,6 +62,15 @@ defmodule ChatsecWeb.Endpoint do
   # refuses plain HTTP before this app ever sees it, and a redirect is never
   # valid protocol behavior mid-handshake anyway, so the socket paths just
   # skip this plug entirely rather than depend on that header being correct.
+  #
+  # /health is exempted for the same underlying reason, discovered the same
+  # way (a real production outage): Traefik's loadbalancer healthcheck
+  # (compose.yaml) makes its own request directly to the container rather
+  # than proxying real client traffic, so it never carries X-Forwarded-Proto
+  # either. force_ssl 301-redirected every poll, and since Traefik doesn't
+  # count a 301 as healthy, it pulled the container out of rotation and
+  # stopped routing all real traffic to it - a self-inflicted full outage
+  # caused by adding the healthcheck without exempting its own path here.
   @force_ssl_opts (case Application.compile_env(:chatsec, :force_ssl) do
                      nil -> nil
                      opts -> Plug.SSL.init(Keyword.put_new(opts, :host, {__MODULE__, :host, []}))
@@ -132,11 +141,12 @@ defmodule ChatsecWeb.Endpoint do
   defp force_ssl_except_sockets(conn, _opts) do
     case @force_ssl_opts do
       nil -> conn
-      opts -> if socket_path?(conn), do: conn, else: Plug.SSL.call(conn, opts)
+      opts -> if skip_force_ssl?(conn), do: conn, else: Plug.SSL.call(conn, opts)
     end
   end
 
-  defp socket_path?(conn) do
-    match?(["socket" | _], conn.path_info) or match?(["live" | _], conn.path_info)
+  defp skip_force_ssl?(conn) do
+    match?(["socket" | _], conn.path_info) or match?(["live" | _], conn.path_info) or
+      conn.path_info == ["health"]
   end
 end
